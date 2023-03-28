@@ -19,3 +19,4 @@ Route::get('/', function () {
 
 require __DIR__.'/pos/auth.php';
 require __DIR__.'/pos/dashboard.php';
+require __DIR__.'/pos/backend/hrms.php';

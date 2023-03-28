@@ -3,6 +3,9 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Models;
+use App\Models\Modules;
+use App\Models\SubModules;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,8 +24,8 @@ class AppServiceProvider extends ServiceProvider
     {
         //
         view()->composer('layouts.pos.partials.sidemenu', function($view){
-            $modules = ModuleMaster::where('status', 1)->orderBy('sort_order')->get();
-            $submodules = SubmoduleMaster::where('status',1)->orderBy('sort_order')->get();
+            $modules = Modules::where('enabled', 1)->orderBy('sort_order')->get();
+            $submodules = SubModules::where('enabled',1)->orderBy('sort_order')->get();
             $view->with(['modules' => $modules, 'submodules' => $submodules]);
         });
     }
