@@ -20,5 +20,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         //
+        view()->composer('layouts.pos.partials.sidemenu', function($view){
+            $modules = ModuleMaster::where('status', 1)->orderBy('sort_order')->get();
+            $submodules = SubmoduleMaster::where('status',1)->orderBy('sort_order')->get();
+            $view->with(['modules' => $modules, 'submodules' => $submodules]);
+        });
     }
 }
