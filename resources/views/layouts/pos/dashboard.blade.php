@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>{{ ENV('APP_NAME')}}</title>
+<title>{{ env('APP_NAME') }}</title>
 <!-- Tell the browser to be responsive to screen width -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -47,7 +47,7 @@
 <div class="wrapper boxed-wrapper">
   <header class="main-header"> 
     <!-- Logo --> 
-    <a href="index.html" class="logo blue-bg"> 
+    <a href="{{ route('dashboard') }}" class="logo blue-bg"> 
     <!-- mini logo for sidebar mini 50x50 pixels --> 
     <span class="logo-mini"><img src="{{ asset('assets/img/logo-n.png') }}" alt=""></span> 
     <!-- logo for regular state and mobile devices --> 
@@ -126,7 +126,7 @@
     
     <!-- Main content -->
     <div class="content">
-      
+      @yield('content')
     </div>
     <!-- /.content --> 
   </div>

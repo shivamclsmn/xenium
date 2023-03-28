@@ -14,7 +14,7 @@ class PositionsController extends Controller
     public function index(Request $request)
     {
         //
-        view('pos.hrms.list');
+        return view('pos.hrms.index');
     }
 
     /**
