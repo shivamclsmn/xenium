@@ -9,7 +9,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <!-- Favicon -->
-<link rel="icon" type="image/png" sizes="16x16" href="{{ asset('assets/img/favicon-16x16.png') }}">
+<link rel="icon" type="image/png" sizes="16x16" href="{{ asset('assets/images/icon.png') }}">
 
 <!-- Google Font -->
 <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
@@ -49,9 +49,9 @@
     <!-- Logo --> 
     <a href="{{ route('dashboard') }}" class="logo blue-bg"> 
     <!-- mini logo for sidebar mini 50x50 pixels --> 
-    <span class="logo-mini"><img src="{{ asset('assets/img/logo-n.png') }}" alt=""></span> 
+    <span class="logo-mini"><img src="{{ asset('assets/images/icon.png') }}" alt=""></span> 
     <!-- logo for regular state and mobile devices --> 
-    <span class="logo-lg"><img src="{{ asset('assets/img/logo.png') }}" alt=""></span> </a> 
+    <span class="logo-lg"><img src="{{ asset('assets/images/logo.png') }}" alt=""></span> </a> 
     <!-- Header Navbar -->
     <nav class="navbar blue-bg navbar-static-top"> 
       <!-- Sidebar toggle button-->
@@ -116,11 +116,11 @@
   <div class="content-wrapper"> 
     <!-- Content Header (Page header) -->
     <div class="content-header sty-one">
-      <h1>@yield('title')</h1>
+      <h1>{{ $title }}</h1>
       <ol class="breadcrumb">
         <li><a href="#">Dashboard</a></li>
-        <li><i class="fa fa-angle-right"></i> @yield('module')</li>
-        <li><i class="fa fa-angle-right"></i> @yield('title')</li>
+        <li><i class="fa fa-angle-right mx-1"></i> {{ $module }}</li>
+        <li><i class="fa fa-angle-right mx-1"></i> {{ $title }}</li>
       </ol>
     </div>
     
