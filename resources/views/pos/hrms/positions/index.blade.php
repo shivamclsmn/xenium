@@ -83,7 +83,7 @@
         $(document).ready(function() {
             loadDataTable();
         });
-        function loadDataTable () {
+        public function loadDataTable () {
             var table = $('#datatable').DataTable({
                 paging: true,
                 retrieve: true,
