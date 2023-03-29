@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Pos\HRMS;
 use App\Http\Controllers\Controller;
 use App\Models\HRMS\Positions;
 use Illuminate\Http\Request;
+use DataTables;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Validator;
 
 class PositionsController extends Controller
 {
@@ -13,17 +16,22 @@ class PositionsController extends Controller
      */
     public function index(Request $request)
     {
+        return view('pos.hrms.positions.index');
+    }
+
+    public function getPositions(Request $request) {
+        //
         if ($request->ajax()) {
-            $data = User::select('id','name','email')->get();
-            return Datatables::of($data)->addIndexColumn()
+            $data = Positions::latest()->get();
+            return Datatables::of($data)
+                ->addIndexColumn()
                 ->addColumn('action', function($row){
-                    $btn = '<a href="javascript:void(0)" class="btn btn-primary btn-sm">View</a>';
-                    return $btn;
+                    $actionBtn = '<a href="javascript:void(0)" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm">Delete</a>';
+                    return $actionBtn;
                 })
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('pos.hrms.positions.index');
     }
 
     /**
@@ -32,14 +40,23 @@ class PositionsController extends Controller
     public function create()
     {
         //
+        
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
+        $data = $request->all();
         //
+        $validate = $request->validate([
+            'position' => ['required','max: 32','unique:'.Positions::class],
+            'max_pos' => ['numeric'],
+            'details' => ['max: 255'],
+        ]);
+        $position = Positions::create($data);   
+        return response()->json(['success', 'Position added successfully!']);
     }
 
     /**

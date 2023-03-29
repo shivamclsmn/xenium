@@ -15,10 +15,8 @@ class Positions extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'username',
-        'email',
-        'password',
-        'is_admin',
+        'position',
+        'max_pos',
+        'details',
     ];
 }

@@ -7,7 +7,7 @@
 <title>{{ env('APP_NAME') }}</title>
 <!-- Tell the browser to be responsive to screen width -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <!-- Favicon -->
 <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('assets/images/icon.png') }}">
 
@@ -23,11 +23,9 @@
 <link rel="stylesheet" href="{{ asset('assets/css/et-line-font/et-line-font.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/css/themify-icons/themify-icons.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/css/simple-lineicon/simple-line-icons.css') }}">
-
+<link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
 <!-- jQuery 3 --> 
 <script src="{{ asset('assets/js/jquery.min.js') }}"></script>
- 
-<script src="{{ asset('assets/plugins/popper/popper.min.js') }}"></script>
 
 <!-- v4.0.0-alpha.6 -->
 <script src="{{ asset('assets/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
@@ -41,7 +39,7 @@
   <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
-
+@yield('styles')
 </head>
 <body class="sidebar-mini sidebar-collapse">
 <div class="wrapper boxed-wrapper">
@@ -136,6 +134,7 @@
     Copyright © 2023 Cubotrix Technologies. All rights reserved.</footer>
 </div>
 <!-- ./wrapper --> 
+@yield('scripts')
 </body>
 
 <!-- Mirrored from uxliner.com/adminkit/demo/minisidebar/ltr/pages-blank.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 14 May 2021 18:47:41 GMT -->
