@@ -51,7 +51,7 @@
     <!-- mini logo for sidebar mini 50x50 pixels --> 
     <span class="logo-mini"><img src="{{ asset('assets/images/icon.png') }}" alt=""></span> 
     <!-- logo for regular state and mobile devices --> 
-    <span class="logo-lg"><img src="{{ asset('assets/images/logo.png') }}" alt=""></span> </a> 
+    <span class="logo-lg"><img src="{{ asset('assets/images/logo-white.png') }}" alt=""></span> </a> 
     <!-- Header Navbar -->
     <nav class="navbar blue-bg navbar-static-top"> 
       <!-- Sidebar toggle button-->

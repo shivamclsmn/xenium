@@ -428,6 +428,14 @@ color:#ccc
 .main-header .logo .logo-mini {
 	display: none
 }
+.logo-mini img {
+	height: 28px !important;
+}
+
+.logo-lg img {
+	height: 30px !important;
+}
+
 .main-header .logo.blue-bg {
 	background: #4164d8;
 	border-bottom: solid 1px #ebebeb;
