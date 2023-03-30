@@ -26,7 +26,7 @@ class PositionsController extends Controller
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function($row){
-                    $actionBtn = '<a href="javascript:void(0)" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm">Delete</a>';
+                    $actionBtn = '<button onclick="showData('.$row->id.')" data-toggle="modal" data-target="#addEditModel" class="edit btn btn-success btn-sm"><i class="fa-light fa-edit"></i></button> <button onclick="delData('.$row->id.')" class="delete btn btn-danger btn-sm"><i class="fa-light fa-trash"></i></button>';
                     return $actionBtn;
                 })
                 ->rawColumns(['action'])
@@ -48,23 +48,35 @@ class PositionsController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $data = $request->all();
+        $posId = $request->id;
         //
         $validate = $request->validate([
             'position' => ['required','max: 32','unique:'.Positions::class],
             'max_pos' => ['numeric'],
             'details' => ['max: 255'],
         ]);
-        $position = Positions::create($data);   
-        return response()->json(['success', 'Position added successfully!']);
+        $data = Positions::updateOrCreate(
+            [
+                'id' => $posId,
+            ],
+            [
+                'position' => $request->position,
+                'max_pos' => $request->max_pos,
+                'details' => $request->details
+            ]
+        );   
+        return response()->json($data);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Positions $positions)
+    public function show(Request $request): JsonResponse
     {
         //
+        $id = $request->all();
+        $data = Positions::where('id', $id)->get();
+        return response()->json($data[0]);
     }
 
     /**
@@ -86,8 +98,10 @@ class PositionsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Positions $positions)
+    public function destroy(Request $request)
     {
         //
+        $data = Positions::where('id', $request->id)->delete();
+        return response()->json($data);
     }
 }

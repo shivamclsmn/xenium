@@ -25,6 +25,7 @@
                                 <div class="modal-body">
                                     <div class="row">
                                         <div id="error" class="col-md-12"></div>
+                                        <input class="form-control" id="id" name="id" type="text" hidden>
                                         <div class="col-md-12">
                                             <fieldset class="form-group">
                                                 <label>Positions</label>
@@ -46,15 +47,15 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary" id="saveBtn">Save</button>
+                                    <button type="reset" class="btn btn-secondary" id="resetBtn" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary save-btn" id="addBtn">Save</button>
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table id="datatable" class="table table-bordered table-hover">
+                    <table id="datatable" class="table table-bordered table-hover table-sm">
                         <thead>
                           <tr>
                             <th>ID #</th>
@@ -81,14 +82,12 @@
     <script type="text/javascript" src="{{ asset('assets/plugins/datatables/datatables.min.js')}}"></script>
     <script>
         $(document).ready(function() {
-            loadDataTable();
-        });
-        public function loadDataTable () {
             var table = $('#datatable').DataTable({
                 paging: true,
                 retrieve: true,
                 processing: true,
                 serverSide: true,
+                responsive: true,
                 ajax: "{{ route('pos.hrms.positions.table') }}",
                 columns: [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex'},
@@ -98,34 +97,68 @@
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ]
             });
-        };
-        $('#addEditForm').on('submit', function(e) {
+        });
+            
+        $('#addBtn').on('click', function(e) {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
                 }
             });
             e.preventDefault();
-            $("#saveBtn").html('<i class="fa-light fa-loader rotate"></i>');
+            $(".save-btn").html('<i class="fa-light fa-loader rotate"></i>');
             $.ajax({
                 data: $('#addEditForm').serialize(),
                 url: "{{ route('pos.hrms.positions.add') }}",
                 type: 'POST',
                 dataType: 'JSON',
                 success: function(data) {
-                    $('#addForm').trigger('reset');
+                    $('#addEditForm')[0].reset();
                     $('#error').empty();
                     $('#closeModal').trigger('click');
-                    loadDataTable();
+                    $('.save-btn').html('Save');
+                    $('#datatable').DataTable().ajax.reload();
                 },
                 error: function(data) {
                     if(data.error = 422) {
                         $('#error').html('<p class="alert alert-danger">'+data.responseJSON.message+'</p>');
                         console.log(data.responseJSON.message);
                     }
-                    $('#saveBtn').html('Save Changes');
+                    $('.save-btn').html('Save');
                 }
             });
         });
+        function showData(id) {
+            $.ajax({
+                data: {'id':id},
+                url: "{{ route('pos.hrms.positions.show') }}",
+                type: 'GET',
+                dataType: 'JSON',
+                success: function(response) {
+                    $('#position').val(response.position);
+                    $('#max_pos').val(response.max_pos);
+                    $('#details').val(response.details);
+                    $('#id').val(response.id);
+                }
+            });
+        }
+        function delData(id) {
+            if(confirm('Are you sure you want to delete?') == true) {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ route('pos.hrms.positions.delete') }}",
+                    data: {'id': id},
+                    dataType: 'JSON',
+                    success: function(response) {
+                        $('#datatable').DataTable().ajax.reload();
+                    }
+                });
+            }
+        }
     </script>
 @endsection
