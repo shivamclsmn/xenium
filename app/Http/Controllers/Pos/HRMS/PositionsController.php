@@ -19,21 +19,6 @@ class PositionsController extends Controller
         return view('pos.hrms.positions.index');
     }
 
-    public function getPositions(Request $request) {
-        //
-        if ($request->ajax()) {
-            $data = Positions::latest()->get();
-            return Datatables::of($data)
-                ->addIndexColumn()
-                ->addColumn('action', function($row){
-                    $actionBtn = '<button onclick="showData('.$row->id.')" data-toggle="modal" data-target="#addEditModel" class="edit btn btn-success btn-sm"><i class="fa-light fa-edit"></i></button> <button onclick="delData('.$row->id.')" class="delete btn btn-danger btn-sm"><i class="fa-light fa-trash"></i></button>';
-                    return $actionBtn;
-                })
-                ->rawColumns(['action'])
-                ->make(true);
-        }
-    }
-
     /**
      * Show the form for creating a new resource.
      */
@@ -71,12 +56,20 @@ class PositionsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Request $request): JsonResponse
+    public function show(Request $request)
     {
         //
-        $id = $request->all();
-        $data = Positions::where('id', $id)->get();
-        return response()->json($data[0]);
+        if ($request->ajax()) {
+            $data = Positions::latest()->get();
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function($row){
+                    $actionBtn = '<button onclick="showData('.$row->id.')" data-toggle="modal" data-target="#addEditModel" class="edit btn btn-success btn-sm"><i class="fa-light fa-edit"></i></button> <button onclick="delData('.$row->id.')" class="delete btn btn-danger btn-sm"><i class="fa-light fa-trash"></i></button>';
+                    return $actionBtn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
     }
 
     /**
@@ -85,6 +78,9 @@ class PositionsController extends Controller
     public function edit(Positions $positions)
     {
         //
+        $id = $request->all();
+        $data = Positions::where('id', $id)->get();
+        return response()->json($data[0]);
     }
 
     /**
