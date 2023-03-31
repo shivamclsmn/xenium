@@ -7,7 +7,7 @@ use App\Models\HRMS\Positions;
 use Illuminate\Http\Request;
 use DataTables;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Validator;   
 
 class PositionsController extends Controller
 {
@@ -16,7 +16,7 @@ class PositionsController extends Controller
      */
     public function index(Request $request)
     {
-        return view('pos.hrms.positions.index');
+        return view('pos.hrms.positions');
     }
 
     /**
@@ -75,7 +75,7 @@ class PositionsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Positions $positions)
+    public function edit(Request $request)
     {
         //
         $id = $request->all();

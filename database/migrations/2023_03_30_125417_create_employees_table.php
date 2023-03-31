@@ -23,7 +23,14 @@ return new class extends Migration
             $table->integer('pincode')->nullable();
             $table->string('aadhar')->nullable();
             $table->string('emergency')->nullable();
+            $table->integer('salary')->nullable();
+            $table->integer('pos_id');
+            $table->date('doj')->nullable();
+            $table->time('in_time')->nullable();
+            $table->time('out_time')->nullable();
+            $table->string('photo')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
