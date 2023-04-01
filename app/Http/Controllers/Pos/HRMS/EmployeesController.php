@@ -18,7 +18,8 @@ class EmployeesController extends Controller
     public function index()
     {
         //
-        return view('pos.hrms.employees');
+        $positions = Positions::get();
+        return view('pos.hrms.employees', compact('positions'));
     }
 
     /**

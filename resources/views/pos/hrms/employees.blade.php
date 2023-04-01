@@ -82,22 +82,34 @@
                                     </div>
                                     <div class="step-tab-panel" id="step2">
                                       <div class="row m-t-2">
-                                        <div class="col-md-6">
-                                          <div class="form-group">
-                                            <label for="jobTitle1">Job Title :</label>
-                                            <input class="form-control" id="jobTitle1" type="text">
-                                          </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                          <div class="form-group">
-                                            <label for="videoUrl1">Company Name :</label>
-                                            <input class="form-control" id="videoUrl1" type="text">
-                                          </div>
-                                        </div>
                                         <div class="col-md-12">
                                           <div class="form-group">
-                                            <label for="shortDescription1">Job Description :</label>
-                                            <textarea name="shortDescription" id="shortDescription1" rows="6" class="form-control"></textarea>
+                                            <label for="address">Address</label>
+                                            <input class="form-control" id="address" type="text" name="address">
+                                          </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                          <div class="form-group">
+                                            <label for="pincode">Pincode</label>
+                                            <input class="form-control" id="videoUrl1" type="text" name="pincode">
+                                          </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                          <div class="form-group">
+                                            <label for="city">City / State</label>
+                                            <input class="form-control" id="city" type="text" name="city">
+                                          </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                          <div class="form-group">
+                                            <label for="aadhar">Aadhar</label>
+                                            <input class="form-control" id="videoUrl1" type="text" name="aadhar">
+                                          </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                          <div class="form-group">
+                                            <label for="emergency">Emergency Contact</label>
+                                            <input class="form-control" id="city" type="text" name="emergency">
                                           </div>
                                         </div>
                                       </div>
@@ -106,41 +118,46 @@
                                       <div class="row m-t-2">
                                         <div class="col-md-6">
                                           <div class="form-group">
-                                            <label for="int1">Interview For :</label>
-                                            <input class="form-control" id="int1" type="text">
-                                          </div>
-                                          <div class="form-group">
-                                            <label for="intType1">Interview Type :</label>
-                                            <select class="custom-select form-control" id="intType1" data-placeholder="Type to search cities" name="intType1">
-                                              <option value="Banquet">Normal</option>
-                                              <option value="Fund Raiser">Difficult</option>
-                                              <option value="Dinner Party">Hard</option>
-                                            </select>
-                                          </div>
-                                          <div class="form-group">
-                                            <label for="Location1">Location :</label>
-                                            <select class="custom-select form-control" id="Location1" name="location">
-                                              <option value="">Select City</option>
-                                              <option value="India">India</option>
-                                              <option value="USA">USA</option>
-                                              <option value="Dubai">Dubai</option>
+                                            <label for="position">Job Title :</label>
+                                            <select class="custom-select form-control" id="position" name="position">
+                                            @if($positions)
+                                              @foreach($positions as $position)
+                                              <option value="{{ $position->position }}">{{ $position->position }}</option>
+                                              @endforeach
+                                            @endif
                                             </select>
                                           </div>
                                         </div>
                                         <div class="col-md-6">
                                           <div class="form-group">
-                                            <label for="jobTitle2">Interview Date :</label>
-                                            <input class="form-control" id="jobTitle2" type="date">
+                                            <label for="salary">Salary</label>
+                                            <input class="form-control" id="salary" type="text" name="salary">
                                           </div>
+                                        </div>
+                                        <div class="col-md-6">
                                           <div class="form-group">
-                                            <label>Requirements :</label>
-                                            <div class="c-inputs-stacked">
-                                              <label class="inline custom-control custom-checkbox block">
-                                                <input class="custom-control-input" type="checkbox">
-                                                <span class="custom-control-indicator"></span> <span class="custom-control-description ml-0">Employee</span> </label>
-                                              <label class="inline custom-control custom-checkbox block">
-                                                <input class="custom-control-input" type="checkbox">
-                                                <span class="custom-control-indicator"></span> <span class="custom-control-description ml-0">Contract</span> </label>
+                                            <label for="doj">Joining date</label>
+                                            <input class="form-control" id="doj" type="date" name="doj">
+                                          </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                          <div class="form-group">
+                                            <label for="in_time">In-time</label>
+                                            <input class="form-control" id="in_time" type="time" name="in_time">
+                                          </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                          <div class="form-group">
+                                            <label for="out_time">Out-time</label>
+                                            <input class="form-control" id="out_time" type="time" name="out_time">
+                                          </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                          <div class="form-group">
+                                            <label for="photo">Employee Photo</label>
+                                            <div class="custom-file">
+                                              <input type="file" class="custom-file-input" id="customFile">
+                                              <label class="custom-file-label" for="customFile">Choose file</label>
                                             </div>
                                           </div>
                                         </div>
@@ -150,47 +167,22 @@
                                       <div class="row m-t-2">
                                         <div class="col-md-6">
                                           <div class="form-group">
-                                            <label for="behName1">Behaviour :</label>
+                                            <label for="behName1">Username</label>
                                             <input class="form-control" id="behName1" type="text">
                                           </div>
                                           <div class="form-group">
-                                            <label for="participants1">Confidance</label>
+                                            <label for="participants1">Password</label>
                                             <input class="form-control" id="participants1" type="text">
                                           </div>
                                           <div class="form-group">
-                                            <label for="participants1">Result</label>
-                                            <select class="custom-select form-control" id="participants1" name="location">
-                                              <option value="">Select Result</option>
-                                              <option value="Selected">Selected</option>
-                                              <option value="Rejected">Rejected</option>
-                                              <option value="Call Second-time">Call Second-time</option>
-                                            </select>
+                                            <label for="participants1">Confirm password</label>
+                                            <input class="form-control" id="participants1" type="text">
                                           </div>
                                         </div>
                                         <div class="col-md-6">
                                           <div class="form-group">
-                                            <label for="decisions1">Comments</label>
-                                            <textarea name="decisions" id="decisions1" rows="4" class="form-control"></textarea>
-                                          </div>
-                                          <div class="form-group">
-                                            <label>Rate Interviwer :</label>
-                                            <div class="c-inputs-stacked">
-                                              <label class="inline custom-control custom-checkbox block">
-                                                <input class="custom-control-input" type="checkbox">
-                                                <span class="custom-control-indicator"></span> <span class="custom-control-description ml-0">1 star</span> </label>
-                                              <label class="inline custom-control custom-checkbox block">
-                                                <input class="custom-control-input" type="checkbox">
-                                                <span class="custom-control-indicator"></span> <span class="custom-control-description ml-0">2 star</span> </label>
-                                              <label class="inline custom-control custom-checkbox block">
-                                                <input class="custom-control-input" type="checkbox">
-                                                <span class="custom-control-indicator"></span> <span class="custom-control-description ml-0">3 star</span> </label>
-                                              <label class="inline custom-control custom-checkbox block">
-                                                <input class="custom-control-input" type="checkbox">
-                                                <span class="custom-control-indicator"></span> <span class="custom-control-description ml-0">4 star</span> </label>
-                                              <label class="inline custom-control custom-checkbox block">
-                                                <input class="custom-control-input" type="checkbox">
-                                                <span class="custom-control-indicator"></span> <span class="custom-control-description ml-0">5 star</span> </label>
-                                            </div>
+                                            <label for="permission">Comments</label>
+                                            <select name="permission" id="permission" rows="6" class="form-control" multiple></select>
                                           </div>
                                         </div>
                                       </div>
