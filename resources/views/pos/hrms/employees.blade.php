@@ -36,13 +36,13 @@
                                           <div class="col-md-6">
                                             <div class="form-group">
                                               <label for="firstName1">First Name:</label>
-                                              <input class="form-control" type="text">
+                                              <input class="form-control" type="text" placeholder="First Name" name="firstname">
                                             </div>
                                           </div>
                                           <div class="col-md-6">
                                             <div class="form-group">
                                               <label for="lastName1">Last Name:</label>
-                                              <input class="form-control" type="text">
+                                              <input class="form-control" type="text" placeholder="Last Name" name="lastname">
                                             </div>
                                           </div>
                                         </div>
@@ -50,13 +50,13 @@
                                           <div class="col-md-6">
                                             <div class="form-group">
                                               <label for="firstName1">Email Address:</label>
-                                              <input class="form-control" type="text">
+                                              <input class="form-control" type="text" placeholder="Email" name="email">
                                             </div>
                                           </div>
                                           <div class="col-md-6">
                                             <div class="form-group">
                                               <label for="lastName1">Phone Number:</label>
-                                              <input class="form-control" type="text">
+                                              <input class="form-control" type="text" placeholder="Mobile" name="mobile">
                                             </div>
                                           </div>
                                         </div>
@@ -74,7 +74,7 @@
                                           <div class="col-md-6">
                                             <div class="form-group">
                                               <label for="dob">Date of Birth :</label>
-                                              <input class="form-control" id="dob" type="date">
+                                              <input class="form-control" id="dob" type="date" name="dob">
                                             </div>
                                           </div>
                                         </div>
@@ -85,31 +85,31 @@
                                         <div class="col-md-12">
                                           <div class="form-group">
                                             <label for="address">Address</label>
-                                            <input class="form-control" id="address" type="text" name="address">
+                                            <input class="form-control" id="address" type="text" name="address" placeholder="Street Address">
                                           </div>
                                         </div>
                                         <div class="col-md-6">
                                           <div class="form-group">
                                             <label for="pincode">Pincode</label>
-                                            <input class="form-control" id="videoUrl1" type="text" name="pincode">
+                                            <input class="form-control" id="videoUrl1" type="text" name="pincode" placeholder="Pincode">
                                           </div>
                                         </div>
                                         <div class="col-md-6">
                                           <div class="form-group">
                                             <label for="city">City / State</label>
-                                            <input class="form-control" id="city" type="text" name="city">
+                                            <input class="form-control" id="city" type="text" name="city" placeholder="city">
                                           </div>
                                         </div>
                                         <div class="col-md-6">
                                           <div class="form-group">
                                             <label for="aadhar">Aadhar</label>
-                                            <input class="form-control" id="videoUrl1" type="text" name="aadhar">
+                                            <input class="form-control" id="videoUrl1" type="text" name="aadhar" placeholder="0000 0000 0000">
                                           </div>
                                         </div>
                                         <div class="col-md-6">
                                           <div class="form-group">
                                             <label for="emergency">Emergency Contact</label>
-                                            <input class="form-control" id="city" type="text" name="emergency">
+                                            <input class="form-control" id="city" type="text" name="emergency" placeholder="Emergency number">
                                           </div>
                                         </div>
                                       </div>
@@ -312,7 +312,7 @@
 
         $('#demo').steps({
             onFinish: function () {
-                alert('Wizard Completed');
+
             }
         });
     </script>
