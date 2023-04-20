@@ -11,6 +11,7 @@ Route::prefix('pos/dashboard/hrms')->group(function () {
         Route::post('/positions/add', [PositionsController::class, 'store'])->name('pos.hrms.positions.add');
         Route::get('/positions/show', [PositionsController::class, 'edit'])->name('pos.hrms.positions.show');
         Route::post('/positions/delete', [PositionsController::class, 'destroy'])->name('pos.hrms.positions.delete');
+        Route::post('/positions/update', [PositionsController::class, 'update'])->name('pos.hrms.positions.update');
 
         // Employee routes
         Route::get('/employees', [EmployeesController::class, 'index'])->name('pos.hrms.employees');
@@ -18,5 +19,6 @@ Route::prefix('pos/dashboard/hrms')->group(function () {
         Route::post('/employees/add', [EmployeesController::class, 'store'])->name('pos.hrms.employees.add');
         Route::get('/employees/show', [EmployeesController::class, 'edit'])->name('pos.hrms.employees.show');
         Route::post('/employees/delete', [EmployeesController::class, 'destroy'])->name('pos.hrms.employees.delete');
+        Route::post('/employees/update', [EmployeesController::class, 'update'])->name('pos.hrms.employees.update');
     });
 });

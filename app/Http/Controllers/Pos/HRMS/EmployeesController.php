@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Pos\HRMS;
 use App\Http\Controllers\Controller;
 use App\Models\HRMS\Positions;
 use App\Models\HRMS\Employees;
+use App\Models\User;
 use Illuminate\Http\Request;
 use DataTables;
 use Illuminate\Http\JsonResponse;
@@ -36,7 +37,38 @@ class EmployeesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data['first_name']=$request->input('firstname');
+        $data['last_name']=$request->input('lastname');
+        $data['birth_date']=$request->input('dob');
+        $data['mobile']=$request->input('mobile');
+        $data['email']=$request->input('email');
+        $data['gender']=$request->input('gender');
+        $data['birth_date']=$request->input('dob');
+        $data['address']=$request->input('address');
+        $data['pincode']=$request->input('pincode');
+        $data['city']=$request->input('city');
+        $data['aadhar']=$request->input('aadhar');
+        $data['emergency']=$request->input('emergency');
+        $data['salary']=$request->input('salary');
+        $data['pos_id']=$request->input('position');
+
+        if(Employees::insert($data))
+        {
+            if($request->input('username')&&$request->input('password')&&$request->input('password_confirmation')&&$request->input('email'))
+            {
+                $data_1['emp_id']=Employees::latest()->first()->id;
+                $data_1['username']=$request->input('username');
+                $data_1['password']=$request->input('password');
+                $data_1['name']=$request->input('firstname');
+                $data_1['email']=$request->input('email');
+                //$data_1['email_verified_at']=1;
+                User::insert($data_1);
+            }
+        // return response()->json(['Message' => 'Success' , 'Status' => 200 , 'Data' => 'Added' ])
+        // ->setStatusCode(200);
+        return redirect(route('pos.hrms.employees'));
+        }
+
     }
 
     /**
@@ -46,7 +78,9 @@ class EmployeesController extends Controller
     {
         //
         if ($request->ajax()) {
+
             $data = Employees::latest()->get();
+            
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function($row){
@@ -61,17 +95,41 @@ class EmployeesController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(employees $employees)
+    public function edit(Request $request)
     {
         //
+        $id = $request->all();
+        $data = Employees::where('id', $id)->get();
+        return response()->json($data[0]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, employees $employees)
+    public function update(Request $request, Employees $employees)
     {
         //
+
+        $data['id']=$request->input('id');
+        $data['first_name']=$request->input('firstname');
+        $data['last_name']=$request->input('lastname');
+        $data['birth_date']=$request->input('dob');
+        $data['mobile']=$request->input('mobile');
+        $data['email']=$request->input('email');
+        $data['gender']=$request->input('gender');
+        $data['birth_date']=$request->input('dob');
+        $data['address']=$request->input('address');
+        $data['pincode']=$request->input('pincode');
+        $data['city']=$request->input('city');
+        $data['aadhar']=$request->input('aadhar');
+        $data['emergency']=$request->input('emergency');
+        $data['salary']=$request->input('salary');
+        $data['pos_id']=$request->input('position');
+
+        if(Employees::where('id', $data['id'])->update($data))
+        {
+            return redirect(route('pos.hrms.employees'));
+        }
     }
 
     /**
