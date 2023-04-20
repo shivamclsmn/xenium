@@ -306,10 +306,11 @@
                     $('#out_time').val(response.out_time);
                     $('#salary').val(response.salary);
 
-                    // $('#username').val(response.username);
-                    // $('#password').val(response.password);   
+                    $('#username').val(response.username);
+                    $('#password').val(response.password);   
 
-                    $("#addEditForm").attr('action', "{{ route('pos.hrms.employees.update')}}");                
+                    $("#addEditForm").attr('action', "{{ route('pos.hrms.employees.update')}}");
+                    $("#username").attr('disabled',true);                
                 }
             });
         }

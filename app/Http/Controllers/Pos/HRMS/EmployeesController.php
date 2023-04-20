@@ -56,7 +56,8 @@ class EmployeesController extends Controller
         {
             if($request->input('username')&&$request->input('password')&&$request->input('password_confirmation')&&$request->input('email'))
             {
-                $data_1['emp_id']=Employees::latest()->first()->id;
+
+                $data_1['emp_id']=Employees::orderBy('id','DESC')->first()->id;
                 $data_1['username']=$request->input('username');
                 $data_1['password']=$request->input('password');
                 $data_1['name']=$request->input('firstname');
@@ -99,8 +100,13 @@ class EmployeesController extends Controller
     {
         //
         $id = $request->all();
-        $data = Employees::where('id', $id)->get();
-        return response()->json($data[0]);
+        $employee = Employees::where('id', $id)->get();
+         $user=User::where('emp_id', $id)->get();
+         unset($user[0]->id);
+         $data=array_merge(json_decode(json_encode($employee),true), json_decode(json_encode($user),true));
+         $data=array_merge($data[0],$data[1]);
+   
+        return response()->json($data);
     }
 
     /**
@@ -126,8 +132,21 @@ class EmployeesController extends Controller
         $data['salary']=$request->input('salary');
         $data['pos_id']=$request->input('position');
 
+
+
         if(Employees::where('id', $data['id'])->update($data))
         {
+            if(User::where('emp_id', $data['id'])->get()->first()->username
+            &&$request->input('password')
+            &&$request->input('password_confirmation')
+            &&$request->input('email'))
+            {
+                $data_1['password']=$request->input('password');
+                $data_1['name']=$request->input('firstname');
+                $data_1['email']=$request->input('email');
+
+                User::where('emp_id', $data['id'])->update($data_1);
+            }
             return redirect(route('pos.hrms.employees'));
         }
     }
