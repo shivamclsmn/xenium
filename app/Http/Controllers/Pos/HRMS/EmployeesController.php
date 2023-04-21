@@ -56,7 +56,7 @@ class EmployeesController extends Controller
         if($request->file('photo'))
         {
             $request->validate([
-                'photo' => 'image|mimes:jpeg,png,jpg|max:2048000000000',
+                'photo' => 'image|mimes:jpeg,png,jpg|max:2048',
             ]);
         
             $imageName = 'emp'.time().'.'.$request->photo->extension();  
@@ -162,9 +162,9 @@ class EmployeesController extends Controller
 
         if($request->file('photo'))
         {
-            // $request->validate([
-            //     'image' => 'required|image|mimes:jpeg,png,jpg|max:2048000000000',
-            // ]);
+            $request->validate([
+                'photo' => 'image|mimes:jpeg,png,jpg|max:2048',
+            ]);
             $imageName = 'emp'.time().'.'.$request->photo->extension();  
             if($request->photo->move(public_path('empphotos'), $imageName))
             $data['photo']=$imageName;
