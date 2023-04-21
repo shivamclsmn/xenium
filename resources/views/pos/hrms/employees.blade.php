@@ -21,7 +21,7 @@
                                 </button>
                             </div>
                             <div class="modal-body" id="demo">
-                                <form action={{route('pos.hrms.employees.add')}} method='post' id="addEditForm">
+                                <form action={{route('pos.hrms.employees.add')}} method='post' id="addEditForm" enctype="multipart/form-data">
                                   @csrf
                                 <div class="step-app">
                                   <ul class="step-steps">
@@ -153,11 +153,15 @@
                                             <input class="form-control" id="out_time" type="time" name="out_time">
                                           </div>
                                         </div>
+                                        <!-- showing employee photo  -->
+                                        <!-- <div class="col-md-3">
+                                          <img src="" id="photoShow" alt="employee photo" width="100" height="120">
+                                        </div> -->
                                         <div class="col-md-12">
                                           <div class="form-group">
                                             <label for="photo">Employee Photo</label>
                                             <div class="custom-file">
-                                              <input type="file" class="custom-file-input" id="customFile">
+                                              <input type="file" class="custom-file-input" id="customFile" name="photo">
                                               <label class="custom-file-label" for="customFile">Choose file</label>
                                             </div>
                                           </div>
@@ -207,10 +211,9 @@
                         <thead>
                           <tr>
                             <th>ID #</th>
-                            <th>Photo</th>
                             <th>Personal Info</th>
                             <th>Contact Info</th>
-                            <th>Job Details</th>
+                            <th>Photo</th>
                             <th>Actions</th>
                           </tr>
                         </thead>
@@ -243,9 +246,9 @@
                 ajax: "{{ route('pos.hrms.employees.table') }}",
                 columns: [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                    {data: 'first_name', name: 'position'},
-                    {data: 'max_pos', name: 'max_pos'},
-                    {data: 'details', name: 'details'},
+                    {data: 'personal_info', name: 'personal_info'},
+                    {data: 'contact_info', name: 'contact_info'},
+                    {data: 'employee_photo', name: 'employee_photo'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ]
             });
@@ -305,7 +308,7 @@
                     $('#in_time').val(response.in_time);
                     $('#out_time').val(response.out_time);
                     $('#salary').val(response.salary);
-
+                    //$('#photoShow').attr("src", "{{url('assets/images')}}/"+response.photo);
                     $('#username').val(response.username);
                     $('#password').val(response.password);   
 
