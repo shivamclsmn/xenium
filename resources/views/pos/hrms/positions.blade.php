@@ -7,7 +7,7 @@
                 <div class="row">
                     <h2 class="mb-4 col-md-6 text-md-left text-center">Job Positions</h2>
                     <div class="mb-4 col-md-6 text-right">
-                        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addEditModel">New Position</button>
+                        <button class="btn btn-primary btn-sm" data-toggle="modal"  data-target="#addEditModel">New Position</button>
                     </div>
                 </div>
                 <!-- Modal -->
@@ -48,7 +48,8 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="reset" class="btn btn-secondary" id="resetBtn" data-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary save-btn" id="addBtn">Save</button>
+                                    <!--<button type="submit" class="btn btn-primary save-btn" id="addBtn">Save</button>-->
+                                    <input type="submit" class="btn btn-primary save-btn" value='Update'></input>
                                 </div>
                             </form>
                         </div>
@@ -139,9 +140,25 @@
                     $('#max_pos').val(response.max_pos);
                     $('#details').val(response.details);
                     $('#id').val(response.id);
+                    $("#addEditForm").attr('action', "{{ route('pos.hrms.positions.update')}}");
                 }
             });
         }
+
+        // function clearForm() {
+        //     $.ajax({
+        //         data: {'id':id},
+        //         url: "{{ route('pos.hrms.positions.show') }}",
+        //         type: 'GET',
+        //         dataType: 'JSON',
+        //         success: function(response) {
+        //             $('#position').val('');
+        //             $('#max_pos').val('');
+        //             $('#details').val('');
+        //             $('#id').val('');
+        //         }
+        //     });
+        // }
         function delData(id) {
             if(confirm('Are you sure you want to delete?') == true) {
                 $.ajaxSetup({

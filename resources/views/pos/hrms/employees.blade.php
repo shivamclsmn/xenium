@@ -21,7 +21,8 @@
                                 </button>
                             </div>
                             <div class="modal-body" id="demo">
-                                <form>
+                                <form action={{route('pos.hrms.employees.add')}} method='post' id="addEditForm" enctype="multipart/form-data">
+                                  @csrf
                                 <div class="step-app">
                                   <ul class="step-steps">
                                     <li><a href="#step1"><span class="number">1</span> Personal Info</a></li>
@@ -31,18 +32,18 @@
                                   </ul>
                                   <div class="step-content">
                                     <div class="step-tab-panel" id="step1">
-                                      
+                                    <input class="form-control" id="id" name="id" type="text" hidden>
                                         <div class="row m-t-2">
                                           <div class="col-md-6">
                                             <div class="form-group">
                                               <label for="firstName1">First Name:</label>
-                                              <input class="form-control" type="text" placeholder="First Name" name="firstname">
+                                              <input class="form-control" type="text" id="firstname" placeholder="First Name" name="firstname" required>
                                             </div>
                                           </div>
                                           <div class="col-md-6">
                                             <div class="form-group">
                                               <label for="lastName1">Last Name:</label>
-                                              <input class="form-control" type="text" placeholder="Last Name" name="lastname">
+                                              <input class="form-control" type="text" id="lastname" placeholder="Last Name" name="lastname" required>
                                             </div>
                                           </div>
                                         </div>
@@ -50,13 +51,13 @@
                                           <div class="col-md-6">
                                             <div class="form-group">
                                               <label for="firstName1">Email Address:</label>
-                                              <input class="form-control" type="text" placeholder="Email" name="email">
+                                              <input class="form-control" type="text" placeholder="Email" name="email" id="email">
                                             </div>
                                           </div>
                                           <div class="col-md-6">
                                             <div class="form-group">
                                               <label for="lastName1">Phone Number:</label>
-                                              <input class="form-control" type="text" placeholder="Mobile" name="mobile">
+                                              <input class="form-control" type="text" placeholder="Mobile" name="mobile" id="mobile" pattern="[0-9]{10}" required>
                                             </div>
                                           </div>
                                         </div>
@@ -64,7 +65,7 @@
                                           <div class="col-md-6">
                                             <div class="form-group">
                                               <label for="gender">Gender :</label>
-                                              <select class="custom-select form-control" id="gender" name="gender">
+                                              <select class="custom-select form-control" id="gender" id="gender" name="gender">
                                                 <option value="Female">Female</option>
                                                 <option value="Male">Male</option>
                                                 <option value="Others">Others</option>
@@ -74,7 +75,7 @@
                                           <div class="col-md-6">
                                             <div class="form-group">
                                               <label for="dob">Date of Birth :</label>
-                                              <input class="form-control" id="dob" type="date" name="dob">
+                                              <input class="form-control" id="dob" type="date" name="dob" required >
                                             </div>
                                           </div>
                                         </div>
@@ -85,13 +86,13 @@
                                         <div class="col-md-12">
                                           <div class="form-group">
                                             <label for="address">Address</label>
-                                            <input class="form-control" id="address" type="text" name="address" placeholder="Street Address">
+                                            <input class="form-control" id="address" type="text" id="address" name="address" placeholder="Street Address">
                                           </div>
                                         </div>
                                         <div class="col-md-6">
                                           <div class="form-group">
                                             <label for="pincode">Pincode</label>
-                                            <input class="form-control" id="videoUrl1" type="text" name="pincode" placeholder="Pincode">
+                                            <input class="form-control" id="videoUrl1" type="text" id="pincode" name="pincode" placeholder="Pincode">
                                           </div>
                                         </div>
                                         <div class="col-md-6">
@@ -103,13 +104,13 @@
                                         <div class="col-md-6">
                                           <div class="form-group">
                                             <label for="aadhar">Aadhar</label>
-                                            <input class="form-control" id="videoUrl1" type="text" name="aadhar" placeholder="0000 0000 0000">
+                                            <input class="form-control" id="videoUrl1" type="text" id="aadhar" name="aadhar" placeholder="0000 0000 0000">
                                           </div>
                                         </div>
                                         <div class="col-md-6">
                                           <div class="form-group">
                                             <label for="emergency">Emergency Contact</label>
-                                            <input class="form-control" id="city" type="text" name="emergency" placeholder="Emergency number">
+                                            <input class="form-control" id="city" type="text" id="emergency"  name="emergency" placeholder="Emergency number">
                                           </div>
                                         </div>
                                       </div>
@@ -119,10 +120,10 @@
                                         <div class="col-md-6">
                                           <div class="form-group">
                                             <label for="position">Job Title :</label>
-                                            <select class="custom-select form-control" id="position" name="position">
+                                            <select class="custom-select form-control" id="position" name="position" required>
                                             @if($positions)
                                               @foreach($positions as $position)
-                                              <option value="{{ $position->position }}">{{ $position->position }}</option>
+                                              <option value="{{ $position->id }}">{{ $position->position }}</option>
                                               @endforeach
                                             @endif
                                             </select>
@@ -152,11 +153,15 @@
                                             <input class="form-control" id="out_time" type="time" name="out_time">
                                           </div>
                                         </div>
+                                        <!-- showing employee photo  -->
+                                        <!-- <div class="col-md-3">
+                                          <img src="" id="photoShow" alt="employee photo" width="100" height="120">
+                                        </div> -->
                                         <div class="col-md-12">
                                           <div class="form-group">
                                             <label for="photo">Employee Photo</label>
                                             <div class="custom-file">
-                                              <input type="file" class="custom-file-input" id="customFile">
+                                              <input type="file" class="custom-file-input" id="customFile" name="photo">
                                               <label class="custom-file-label" for="customFile">Choose file</label>
                                             </div>
                                           </div>
@@ -168,15 +173,15 @@
                                         <div class="col-md-6">
                                           <div class="form-group">
                                             <label for="behName1">Username</label>
-                                            <input class="form-control" id="behName1" type="text">
+                                            <input class="form-control" id="username" name="username" type="text">
                                           </div>
                                           <div class="form-group">
                                             <label for="participants1">Password</label>
-                                            <input class="form-control" id="participants1" type="text">
+                                            <input class="form-control" id="password" name="password" type="text">
                                           </div>
                                           <div class="form-group">
                                             <label for="participants1">Confirm password</label>
-                                            <input class="form-control" id="participants1" type="text">
+                                            <input class="form-control" id="password_confirmation" name="password_confirmation" type="text">
                                           </div>
                                         </div>
                                         <div class="col-md-6">
@@ -191,7 +196,9 @@
                                   <div class="step-footer">
                                     <button data-direction="prev" class="btn btn-light">Previous</button>
                                     <button data-direction="next" class="btn btn-primary">Next</button>
-                                    <button data-direction="finish" class="btn btn-primary">Submit</button>
+                                    <!--<button data-direction="finish" class="btn btn-primary">Submit</button>-->
+                                    <input type="submit" class="btn btn-primary save-btn" value='Update'></input>
+                                    <input type='submit' data-direction="finish" class="btn btn-primary" value='Submit'></input>
                                   </div>
                                 </div>
                                 <form>
@@ -204,10 +211,9 @@
                         <thead>
                           <tr>
                             <th>ID #</th>
-                            <th>Photo</th>
                             <th>Personal Info</th>
                             <th>Contact Info</th>
-                            <th>Job Details</th>
+                            <th>Photo</th>
                             <th>Actions</th>
                           </tr>
                         </thead>
@@ -240,9 +246,9 @@
                 ajax: "{{ route('pos.hrms.employees.table') }}",
                 columns: [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                    {data: 'first_name', name: 'position'},
-                    {data: 'max_pos', name: 'max_pos'},
-                    {data: 'details', name: 'details'},
+                    {data: 'personal_info', name: 'personal_info'},
+                    {data: 'contact_info', name: 'contact_info'},
+                    {data: 'employee_photo', name: 'employee_photo'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ]
             });
@@ -280,14 +286,34 @@
         function showData(id) {
             $.ajax({
                 data: {'id':id},
-                url: "{{ route('pos.hrms.positions.show') }}",
+                url: "{{ route('pos.hrms.employees.show') }}",
                 type: 'GET',
                 dataType: 'JSON',
                 success: function(response) {
-                    $('#position').val(response.position);
-                    $('#max_pos').val(response.max_pos);
-                    $('#details').val(response.details);
-                    $('#id').val(response.id);
+                  console.log(response);
+                    $('#id').val(response.id);                  
+                    $('#firstname').val(response.first_name);
+                    $('#lastname').val(response.last_name);
+                    $('#mobile').val(response.mobile);
+                    $('#email').val(response.email);
+                    $('#gender').val(response.gender);
+                    $('#dob').val(response.birth_date);
+                    $('#address').val(response.address);
+                    $('#city').val(response.city);
+                    $('#aadhar').val(response.aadhar);
+                    $('#emergency').val(response.emergency);
+                    $('#salary').val(response.salary);
+                    $('#position').val(response.pos_id);
+                    $('#doj').val(response.doj);
+                    $('#in_time').val(response.in_time);
+                    $('#out_time').val(response.out_time);
+                    $('#salary').val(response.salary);
+                    //$('#photoShow').attr("src", "{{url('assets/images')}}/"+response.photo);
+                    $('#username').val(response.username);
+                    $('#password').val(response.password);   
+
+                    $("#addEditForm").attr('action', "{{ route('pos.hrms.employees.update')}}");
+                    $("#username").attr('disabled',true);                
                 }
             });
         }
