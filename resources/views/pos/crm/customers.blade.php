@@ -137,7 +137,7 @@
                             <th>ID #</th>
                             <th>Personal Info</th>
                             <th>Contact Info</th>
-                            <th>Photo</th>
+                            <th>Address</th>
                             <th>Actions</th>
                           </tr>
                         </thead>
@@ -172,7 +172,7 @@
                     {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                     {data: 'personal_info', name: 'personal_info'},
                     {data: 'contact_info', name: 'contact_info'},
-                    {data: 'customer_photo', name: 'customer_photo'},
+                    {data: 'address', name: 'address'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ]
             });

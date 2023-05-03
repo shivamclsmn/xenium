@@ -86,10 +86,10 @@ class CustomersController extends Controller
                     return $row->full_name;
                 })
                 ->addColumn('contact_info', function($row){
-                    return $row->mobile.'<br>'.$row->email.'<br>'.$row->address.'</b>';
+                    return $row->mobile.'<br>'.$row->email.'</b>';
                 })
-                ->addColumn('customer_photo', function($row){
-                    return "<img src='".url('customerphotos/').'/'.$row->photo."' width=80px height=100px>";
+                ->addColumn('address', function($row){
+                    return $row->address;
                 })
                 ->addColumn('action', function($row){
                     $actionBtn = '<button onclick="showData('.$row->id.')" data-toggle="modal" data-target="#addEditModel" class="edit btn btn-success btn-sm"><i class="fa-light fa-edit"></i></button> <button onclick="delData('.$row->id.')" class="delete btn btn-danger btn-sm"><i class="fa-light fa-trash"></i></button>';
