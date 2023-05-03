@@ -326,7 +326,7 @@
                 });
                 $.ajax({
                     type: 'POST',
-                    url: "{{ route('pos.hrms.positions.delete') }}",
+                    url: "{{ route('pos.hrms.employees.delete') }}",
                     data: {'id': id},
                     dataType: 'JSON',
                     success: function(response) {
