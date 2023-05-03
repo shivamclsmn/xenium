@@ -1,13 +1,13 @@
-@extends('layouts.pos.dashboard', ['title' => 'Customers', 'module' => 'CRM'])
+@extends('layouts.pos.dashboard', ['title' => 'Dealers', 'module' => 'CRM'])
 @section('content')
 <div class="row">
     <div class="col-12">
         <div class="card">
             <div class="card-body">
                 <div class="row">
-                    <h2 class="mb-4 col-md-6 text-md-left text-center">Customers</h2>
+                    <h2 class="mb-4 col-md-6 text-md-left text-center">Dealers</h2>
                     <div class="mb-4 col-md-6 text-right">
-                        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addEditModel">New Customer</button>
+                        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addEditModel">New Dealers</button>
                     </div>
                 </div>
                 <!-- Modal -->
@@ -21,7 +21,7 @@
                                 </button>
                             </div>
                             <div class="modal-body" id="demo">
-                                <form action={{route('pos.crm.customers.add')}} method='post' id="addEditForm" enctype="multipart/form-data">
+                                <form action={{route('pos.crm.dealers.add')}} method='post' id="addEditForm" enctype="multipart/form-data">
                                   @csrf
                                 <div class="step-app">
                                   <ul class="step-steps">
@@ -83,10 +83,10 @@
                                         <div class="col-md-6">
                                           <div class="form-group">
                                           <label for="isDealer">Type of customer</label><br>
-                                          <input type="radio" id="customer" name="isDealer" value=0 checked>
+                                          <input type="radio" id="customer" name="isDealer" value=0 >
                                           <label for="customer">Customer</label><br>
-                                          <input type="radio" id="dealer" name="isDealer" value=1 >
-                                          <label for="dealer">Dealer</label><br>                                                                    
+                                          <input type="radio" id="dealer" name="isDealer" value=1 checked>
+                                          <label for="dealer">Dealer</label><br>                                                                  
                                           </div>
                                         </div>
 
@@ -141,7 +141,7 @@
                 processing: true,
                 serverSide: true,
                 responsive: true,
-                ajax: "{{ route('pos.crm.customers.table') }}",
+                ajax: "{{ route('pos.crm.dealers.table') }}",
                 columns: [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                     {data: 'personal_info', name: 'personal_info'},
@@ -162,7 +162,7 @@
             $(".save-btn").html('<i class="fa-light fa-loader rotate"></i>');
             $.ajax({
                 data: $('#addEditForm').serialize(),
-                url: "{{ route('pos.crm.customers.add') }}",
+                url: "{{ route('pos.crm.dealers.add') }}",
                 type: 'POST',
                 dataType: 'JSON',
                 success: function(data) {
@@ -184,7 +184,7 @@
         function showData(id) {
             $.ajax({
                 data: {'id':id},
-                url: "{{ route('pos.crm.customers.show') }}",
+                url: "{{ route('pos.crm.dealers.show') }}",
                 type: 'GET',
                 dataType: 'JSON',
                 success: function(response) {
@@ -196,7 +196,7 @@
                     $('#address').val(response.address);
                     $('#city').val(response.city);
 
-                    $("#addEditForm").attr('action', "{{ route('pos.crm.customers.update')}}"); 
+                    $("#addEditForm").attr('action', "{{ route('pos.crm.dealers.update')}}"); 
                     $('#btnSubmit').html("Update");           
                 }
             });
@@ -210,7 +210,7 @@
                 });
                 $.ajax({
                     type: 'POST',
-                    url: "{{ route('pos.crm.customers.delete') }}",
+                    url: "{{ route('pos.crm.dealers.delete') }}",
                     data: {'id': id},
                     dataType: 'JSON',
                     success: function(response) {

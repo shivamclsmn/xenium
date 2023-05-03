@@ -209,9 +209,9 @@
                         <thead>
                           <tr>
                             <th>ID #</th>
+                            <th>Photo</th>
                             <th>Personal Info</th>
                             <th>Contact Info</th>
-                            <th>Photo</th>
                             <th>Actions</th>
                           </tr>
                         </thead>
@@ -244,9 +244,9 @@
                 ajax: "{{ route('pos.hrms.employees.table') }}",
                 columns: [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                    {data: 'employee_photo', name: 'employee_photo'},
                     {data: 'personal_info', name: 'personal_info'},
                     {data: 'contact_info', name: 'contact_info'},
-                    {data: 'employee_photo', name: 'employee_photo'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ]
             });
