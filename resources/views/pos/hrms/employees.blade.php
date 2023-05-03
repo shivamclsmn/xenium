@@ -196,9 +196,7 @@
                                   <div class="step-footer">
                                     <button data-direction="prev" class="btn btn-light">Previous</button>
                                     <button data-direction="next" class="btn btn-primary">Next</button>
-                                    <!--<button data-direction="finish" class="btn btn-primary">Submit</button>-->
-                                    <input type="submit" class="btn btn-primary save-btn" value='Update'></input>
-                                    <input type='submit' data-direction="finish" class="btn btn-primary" value='Submit'></input>
+                                    <button type='submit' id='btnSubmit' data-direction="finish" class="btn btn-primary">Submit</button>
                                   </div>
                                 </div>
                                 <form>
@@ -313,7 +311,8 @@
                     $('#password').val(response.password);   
 
                     $("#addEditForm").attr('action', "{{ route('pos.hrms.employees.update')}}");
-                    $("#username").attr('disabled',true);                
+                    $("#username").attr('disabled',true);   
+                    $('#btnSubmit').html("Update");                 
                 }
             });
         }
@@ -341,5 +340,8 @@
 
             }
         });
+        $( "#btnSubmit" ).on( "click", function() {
+          $( "#addEditForm" ).trigger( "submit" );
+        } );
     </script>
 @endsection

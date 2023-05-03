@@ -48,8 +48,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="reset" class="btn btn-secondary" id="resetBtn" data-dismiss="modal">Close</button>
-                                    <!--<button type="submit" class="btn btn-primary save-btn" id="addBtn">Save</button>-->
-                                    <input type="submit" class="btn btn-primary save-btn" value='Update'></input>
+                                    <button type='submit' id='btnSubmit' data-direction="finish" class="btn btn-primary">Submit</button>
                                 </div>
                             </form>
                         </div>
@@ -141,6 +140,7 @@
                     $('#details').val(response.details);
                     $('#id').val(response.id);
                     $("#addEditForm").attr('action', "{{ route('pos.hrms.positions.update')}}");
+                    $('#btnSubmit').html("Update");    
                 }
             });
         }
@@ -177,5 +177,8 @@
                 });
             }
         }
+        $( "#btnSubmit" ).on( "click", function() {
+          $( "#addEditForm" ).trigger( "submit" );
+        } );
     </script>
 @endsection

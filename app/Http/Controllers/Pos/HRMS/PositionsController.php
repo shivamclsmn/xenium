@@ -50,7 +50,8 @@ class PositionsController extends Controller
                 'details' => $request->details
             ]
         );   
-        return response()->json($data);
+        //return response()->json($data);
+        return redirect(route('pos.hrms.positions'));
     }
 
     /**

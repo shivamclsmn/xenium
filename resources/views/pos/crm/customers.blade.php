@@ -7,7 +7,7 @@
                 <div class="row">
                     <h2 class="mb-4 col-md-6 text-md-left text-center">Customers</h2>
                     <div class="mb-4 col-md-6 text-right">
-                        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addEditModel">New Employee</button>
+                        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addEditModel">New Customer</button>
                     </div>
                 </div>
                 <!-- Modal -->
@@ -27,8 +27,7 @@
                                   <ul class="step-steps">
                                     <li><a href="#step1"><span class="number">1</span> Personal Info</a></li>
                                     <li><a href="#step2"><span class="number">2</span> Contact Info</a></li>
-                                    <li><a href="#step3"><span class="number">3</span> Job Details</a></li>
-                                    <li><a href="#step4"><span class="number">4</span> POS Access</a></li>
+                                    <li><a href="#step3"><span class="number">3</span> Customer Type Info</a></li>
                                   </ul>
                                   <div class="step-content">
                                     <div class="step-tab-panel" id="step1">
@@ -78,42 +77,19 @@
                                         </div>
                                       </div>
                                     </div>
+                                    
                                     <div class="step-tab-panel" id="step3">
                                       <div class="row m-t-2">
+                                        <div class="col-md-6">
+                                          <div class="form-group">
+                                          <label for="isDealer">Type of customer</label><br>
+                                          <input type="radio" id="html" name="isDealer" value=0 checked>
+                                          <label for="normal">Customer</label><br>
+                                          <input type="radio" id="css" name="isDealer" value=1 >
+                                          <label for="dealer">Dealer</label><br>                                                                  
+                                          </div>
+                                        </div>
 
-                                        <!-- showing customer photo  -->
-                                        <!-- <div class="col-md-3">
-                                          <img src="" id="photoShow" alt="employee photo" width="100" height="120">
-                                        </div> -->
-                                        <div class="col-md-12">
-                                          <div class="form-group">
-                                            <label for="photo">Customer Photo</label>
-                                            <div class="custom-file">
-                                              <input type="file" class="custom-file-input" id="customFile" name="photo">
-                                              <label class="custom-file-label" for="customFile">Choose file</label>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div class="step-tab-panel" id="step4">
-                                      <div class="row m-t-2">
-                                        <div class="col-md-6">
-                                          <div class="form-group">
-                                            <label for="participants1">Password</label>
-                                            <input class="form-control" id="password" name="password" type="text">
-                                          </div>
-                                          <div class="form-group">
-                                            <label for="participants1">Confirm password</label>
-                                            <input class="form-control" id="password_confirmation" name="password_confirmation" type="text">
-                                          </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                          <div class="form-group">
-                                            <label for="permission">Comments</label>
-                                            <select name="permission" id="permission" rows="6" class="form-control" multiple></select>
-                                          </div>
-                                        </div>
                                       </div>
                                     </div>
                                   </div>
@@ -121,8 +97,8 @@
                                     <button data-direction="prev" class="btn btn-light">Previous</button>
                                     <button data-direction="next" class="btn btn-primary">Next</button>
                                     <!--<button data-direction="finish" class="btn btn-primary">Submit</button>-->
-                                    <input type="submit" class="btn btn-primary save-btn" value='Update'></input>
-                                    <input type='submit' data-direction="finish" class="btn btn-primary" value='Submit'></input>
+                                    <!-- <input type="submit" class="btn btn-primary save-btn" value='Update'></input> -->
+                                    <button type='submit' id='btnSubmit' data-direction="finish" class="btn btn-primary">Submit</button>
                                   </div>
                                 </div>
                                 <form>
@@ -222,7 +198,8 @@
                     $('#address').val(response.address);
                     $('#city').val(response.city);
 
-                    $("#addEditForm").attr('action', "{{ route('pos.crm.customers.update')}}");            
+                    $("#addEditForm").attr('action', "{{ route('pos.crm.customers.update')}}"); 
+                    $('#btnSubmit').html("Update");           
                 }
             });
         }
@@ -250,5 +227,8 @@
 
             }
         });
+        $( "#btnSubmit" ).on( "click", function() {
+          $( "#addEditForm" ).trigger( "submit" );
+        } );
     </script>
 @endsection

@@ -18,7 +18,7 @@ class CustomersController extends Controller
     public function index()
     {
         //
-        $customers = Customers::get();
+        $customers = Customers::where('isDealer','0')->get();
         return view('pos.crm.customers', compact('customers'));
     }
 
@@ -77,7 +77,7 @@ class CustomersController extends Controller
         //
         if ($request->ajax()) {
 
-            $data = Customers::latest()->get();
+            $data = Customers::where('isDealer',0)->latest()->get();
             
             //$path=url('assets/empphotos');
             return Datatables::of($data)
