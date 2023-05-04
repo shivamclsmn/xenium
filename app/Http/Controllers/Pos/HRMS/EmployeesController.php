@@ -190,8 +190,9 @@ class EmployeesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(employees $employees)
+    public function destroy(Request $request)
     {
-        //
+        $data = Employees::where('id', $request->id)->delete();
+        return response()->json($data);
     }
 }
