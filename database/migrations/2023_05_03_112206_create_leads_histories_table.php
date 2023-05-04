@@ -13,13 +13,18 @@ return new class extends Migration
     {
         Schema::create('leads_histories', function (Blueprint $table) {
             $table->id();
-            $table->foreign('lead_id')->references('id')->on('leads');
+
             $table->string('description');
             $table->tinyinteger('status');
             $table->date('nextCallingDate');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->unsignedBigInteger('lead_id')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
+            
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('lead_id')->references('id')->on('leads');
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
