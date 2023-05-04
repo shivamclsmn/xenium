@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Pos\CRM;
 use App\Http\Controllers\Controller;
 use App\Models\CRM\Leads;
 use App\Models\CRM\Customers;
+use App\Models\CRM\Lead_customer;
+use App\Models\CRM\Customer_view;
 use App\Models\User;
 use Illuminate\Http\Request;
 use DataTables;
@@ -79,18 +81,21 @@ class LeadsController extends Controller
         //
         if ($request->ajax()) {
 
-           // $data = Customers::where('isDealer',0)->latest()->get();
-          // $data=DB::table('customers')->latest()->get();
-      // $data=DB::table('customers')->max('id')->get();
             $data = DB::table('customers')
                         ->join('leads','customers.id','=','leads.customer_id')
-                        ->select('leads.*','customers.full_name','customers.mobile','customers.email','customers.address')
-                        ->orderBy('customer.id','desc')->get();
+                        ->select('leads.id as id','customers.id as customer_id',
+                        'customers.full_name',
+                        'customers.mobile',
+                        'customers.email',
+                        'customers.address')
+                        ->orderBy('customer_id','desc')->get();
 
-            //$path=url('assets/empphotos');
             return Datatables::of($data)
                 ->addIndexColumn()
                 
+                ->addColumn('lead_id', function($row){
+                    return $row->id;
+                })
                 ->addColumn('personal_info', function($row){
                     return $row->full_name;
                 })

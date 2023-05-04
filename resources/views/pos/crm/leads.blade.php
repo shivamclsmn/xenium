@@ -108,7 +108,7 @@
                     <table id="datatable" class="table table-bordered table-hover table-sm">
                         <thead>
                           <tr>
-                            <th>ID #</th>
+                            <th>Sr.#</th>
                             <th>Lead ID</th>
                             <th>Personal Info</th>
                             <th>Contact Info</th>
@@ -144,7 +144,7 @@
                 ajax: "{{ route('pos.crm.leads.table') }}",
                 columns: [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                    {data: 'personal_info', name: 'personal_info'},
+                    {data: 'lead_id', name: 'lead_id'},
                     {data: 'personal_info', name: 'personal_info'},
                     {data: 'contact_info', name: 'contact_info'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
