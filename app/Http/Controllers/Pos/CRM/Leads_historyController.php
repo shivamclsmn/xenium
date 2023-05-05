@@ -19,7 +19,7 @@ class Leads_historyController extends Controller
     {
         //
         $customers = Leads_history::get();
-        return view('pos.crm.customers', compact('customers'));
+        return view('pos.crm.leads_history', compact('customers'));
     }
 
     /**
@@ -66,7 +66,7 @@ class Leads_historyController extends Controller
         }
         //dd($request->input());
         if(Leads_history::insert($data))
-        return redirect(route('pos.crm.customers'));
+        return redirect(route('pos.crm.leads_history'));
     }
 
     /**
@@ -146,7 +146,7 @@ class Leads_historyController extends Controller
         }
 
         if(Leads_history::where('id', $request->input('id'))->update($data))
-            return redirect(route('pos.crm.customers'));
+            return redirect(route('pos.crm.leads_history'));
 
     }
 

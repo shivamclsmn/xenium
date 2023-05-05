@@ -1,13 +1,13 @@
-@extends('layouts.pos.dashboard', ['title' => 'Leads History', 'module' => 'CRM'])
+@extends('layouts.pos.dashboard', ['title' => 'Customers', 'module' => 'CRM'])
 @section('content')
 <div class="row">
     <div class="col-12">
         <div class="card">
             <div class="card-body">
                 <div class="row">
-                    <h2 class="mb-4 col-md-6 text-md-left text-center">Under development..</h2>
+                    <h2 class="mb-4 col-md-6 text-md-left text-center">Customers</h2>
                     <div class="mb-4 col-md-6 text-right">
-                        <button class="btn btn-primary btn-sm" id="btnNew" data-toggle="modal" data-target="#addEditModel">H</button>
+                        <button class="btn btn-primary btn-sm" id="btnNew" data-toggle="modal" data-target="#addEditModel">New Customer</button>
                     </div>
                 </div>
                 <!-- Modal -->
@@ -21,7 +21,7 @@
                                 </button>
                             </div>
                             <div class="modal-body" id="demo">
-                                <form action={{route('pos.crm.customers.add')}} method='post' id="addEditForm" enctype="multipart/form-data">
+                                <form action={{route('pos.inventory.specifications.add')}} method='post' id="addEditForm" enctype="multipart/form-data">
                                   @csrf
                                 <div class="step-app">
                                   <ul class="step-steps">
@@ -141,7 +141,7 @@
                 processing: true,
                 serverSide: true,
                 responsive: true,
-                ajax: "{{ route('pos.crm.customers.table') }}",
+                ajax: "{{ route('pos.inventory.specifications.table') }}",
                 columns: [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                     {data: 'personal_info', name: 'personal_info'},
@@ -162,7 +162,7 @@
             $(".save-btn").html('<i class="fa-light fa-loader rotate"></i>');
             $.ajax({
                 data: $('#addEditForm').serialize(),
-                url: "{{ route('pos.crm.customers.add') }}",
+                url: "{{ route('pos.inventory.specifications.add') }}",
                 type: 'POST',
                 dataType: 'JSON',
                 success: function(data) {
@@ -184,7 +184,7 @@
         function showData(id) {
             $.ajax({
                 data: {'id':id},
-                url: "{{ route('pos.crm.customers.show') }}",
+                url: "{{ route('pos.inventory.specifications.show') }}",
                 type: 'GET',
                 dataType: 'JSON',
                 success: function(response) {
@@ -196,7 +196,7 @@
                     $('#address').val(response.address);
                     $('#city').val(response.city);
 
-                    $("#addEditForm").attr('action', "{{ route('pos.crm.customers.update')}}"); 
+                    $("#addEditForm").attr('action', "{{ route('pos.inventory.specifications.update')}}"); 
                     $('#btnSubmit').html("Update");           
                 }
             });
@@ -210,7 +210,7 @@
                 });
                 $.ajax({
                     type: 'POST',
-                    url: "{{ route('pos.crm.customers.delete') }}",
+                    url: "{{ route('pos.inventory.specifications.delete') }}",
                     data: {'id': id},
                     dataType: 'JSON',
                     success: function(response) {
@@ -230,7 +230,7 @@
         } );
         $( "#btnNew" ).on( "click", function() {
           $('#btnSubmit').html("submit");
-          $("#addEditForm").attr('action', "{{ route('pos.crm.leads_history.add')}}");
+          $("#addEditForm").attr('action', "{{ route('pos.inventory.specifications.add')}}");
         } );
     </script>
 @endsection
