@@ -87,8 +87,8 @@ class CategoriesController extends Controller
     {
         //
         $id = $request->all();
-        $data = Categories::where('id', $id)->get();    
-
+        $data = Categories::where('id', $id)->get();
+        $data[0]->tags=join(',',json_decode($data[0]->tags, true));
         return response()->json($data[0]);
     }
 
@@ -99,7 +99,7 @@ class CategoriesController extends Controller
     {
         $data['name']=$request->input('categoryName');
         
-        $tags=join(', ',json_decode($request->input('tags')));
+        $tags=json_encode(explode(',',$request->input('tags')));
         
         $data['tags']=$tags;
 

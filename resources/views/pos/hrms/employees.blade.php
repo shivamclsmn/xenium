@@ -1,4 +1,4 @@
-@extends('layouts.pos.dashboard', ['title' => 'Positions', 'module' => 'HRMS'])
+@extends('layouts.pos.dashboard', ['title' => 'Employees', 'module' => 'HRMS'])
 @section('content')
 <div class="row">
     <div class="col-12">
