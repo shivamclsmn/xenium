@@ -7,7 +7,7 @@
                 <div class="row">
                     <h2 class="mb-4 col-md-6 text-md-left text-center">Dealers</h2>
                     <div class="mb-4 col-md-6 text-right">
-                        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addEditModel">New Dealers</button>
+                        <button class="btn btn-primary btn-sm" id="btnNew" data-toggle="modal" data-target="#addEditModel">New Dealers</button>
                     </div>
                 </div>
                 <!-- Modal -->
@@ -227,6 +227,10 @@
         });
         $( "#btnSubmit" ).on( "click", function() {
           $( "#addEditForm" ).trigger( "submit" );
+        } );
+        $( "#btnNew" ).on( "click", function() {
+          $('#btnSubmit').html("submit");
+          $("#addEditForm").attr('action', "{{ route('pos.crm.dealers.add')}}");
         } );
     </script>
 @endsection

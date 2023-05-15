@@ -7,7 +7,7 @@
                 <div class="row">
                     <h2 class="mb-4 col-md-6 text-md-left text-center">Leads</h2>
                     <div class="mb-4 col-md-6 text-right">
-                        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addEditModel">New Lead</button>
+                        <button class="btn btn-primary btn-sm" id="btnNew" data-toggle="modal" data-target="#addEditModel">New Lead</button>
                     </div>
                 </div>
                 <!-- Modal -->
@@ -21,7 +21,7 @@
                                 </button>
                             </div>
                             <div class="modal-body" id="demo">
-                                <form action={{route('pos.crm.customers.add')}} method='post' id="addEditForm" enctype="multipart/form-data">
+                                <form action={{route('pos.crm.leads.add')}} method='post' id="addEditForm" enctype="multipart/form-data">
                                   @csrf
                                 <div class="step-app">
                                   <ul class="step-steps">
@@ -108,7 +108,7 @@
                     <table id="datatable" class="table table-bordered table-hover table-sm">
                         <thead>
                           <tr>
-                            <th>ID #</th>
+                            <th>Sr.#</th>
                             <th>Lead ID</th>
                             <th>Personal Info</th>
                             <th>Contact Info</th>
@@ -144,7 +144,7 @@
                 ajax: "{{ route('pos.crm.leads.table') }}",
                 columns: [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                    {data: 'personal_info', name: 'personal_info'},
+                    {data: 'lead_id', name: 'lead_id'},
                     {data: 'personal_info', name: 'personal_info'},
                     {data: 'contact_info', name: 'contact_info'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
@@ -184,7 +184,7 @@
         function showData(id) {
             $.ajax({
                 data: {'id':id},
-                url: "{{ route('pos.crm.customers.show') }}",
+                url: "{{ route('pos.crm.leads.show') }}",
                 type: 'GET',
                 dataType: 'JSON',
                 success: function(response) {
@@ -196,7 +196,7 @@
                     $('#address').val(response.address);
                     $('#city').val(response.city);
 
-                    $("#addEditForm").attr('action', "{{ route('pos.crm.customers.update')}}"); 
+                    $("#addEditForm").attr('action', "{{ route('pos.crm.leads.update')}}"); 
                     $('#btnSubmit').html("Update");           
                 }
             });
@@ -227,6 +227,10 @@
         });
         $( "#btnSubmit" ).on( "click", function() {
           $( "#addEditForm" ).trigger( "submit" );
+        } );
+        $( "#btnNew" ).on( "click", function() {
+          $('#btnSubmit').html("submit");
+          $("#addEditForm").attr('action', "{{ route('pos.crm.leads.add')}}");
         } );
     </script>
 @endsection

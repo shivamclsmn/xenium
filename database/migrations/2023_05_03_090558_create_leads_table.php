@@ -28,7 +28,7 @@ return new class extends Migration
             $table->softDeletes();
             //user detail
 
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users');//who has created the lead in system
             $table->foreign('customer_id')->references('id')->on('customers');
 
         });

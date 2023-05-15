@@ -1,18 +1,16 @@
 <?php
-namespace App\Http\Controllers\Pos\CRM;
+
+namespace App\Http\Controllers\Pos\Inventory;
 
 use App\Http\Controllers\Controller;
-use App\Models\CRM\Leads;
-use App\Models\CRM\Customers;
-use App\Models\CRM\Leads_source;
-use App\Models\User;
+use App\Models\Inventory\Specifications;
+use App\Models\Inventory\Categories;
 use Illuminate\Http\Request;
 use DataTables;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\DB;
 
-class LeadsController extends Controller
+class SpecificationsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,9 +18,8 @@ class LeadsController extends Controller
     public function index()
     {
         //
-        //$customers = Leads::where('isDealer','0')->get();
-        $customers = DB::table('customers')->where('isDealer','0')->get();
-        return view('pos.crm.leads', compact('customers'));
+        $data = Specifications::where('isDealer','0')->get();
+        return view('pos.inventory.specifications', compact('data'));
     }
 
     /**
@@ -68,8 +65,8 @@ class LeadsController extends Controller
             $data['password']=$request->input('password');
         }
         //dd($request->input());
-        if(Leads::insert($data))
-        return redirect(route('pos.crm.leads'));
+        if(Specifications::insert($data))
+        return redirect(route('pos.inventory.specifications'));
     }
 
     /**
@@ -80,21 +77,11 @@ class LeadsController extends Controller
         //
         if ($request->ajax()) {
 
-            $data = DB::table('customers')
-                        ->join('leads','customers.id','=','leads.customer_id')
-                        ->select('leads.id as id','customers.id as customer_id',
-                        'customers.full_name',
-                        'customers.mobile',
-                        'customers.email',
-                        'customers.address')
-                        ->orderBy('customer_id','desc')->get();
-
+            $data = Specifications::where('isDealer',0)->latest()->get();
+            
+            //$path=url('assets/empphotos');
             return Datatables::of($data)
                 ->addIndexColumn()
-                
-                ->addColumn('lead_id', function($row){
-                    return $row->id;
-                })
                 ->addColumn('personal_info', function($row){
                     return $row->full_name;
                 })
@@ -121,7 +108,7 @@ class LeadsController extends Controller
     {
         //
         $id = $request->all();
-        $data = Leads::where('id', $id)->get();    
+        $data = Specifications::where('id', $id)->get();    
 
         return response()->json($data[0]);
     }
@@ -129,7 +116,7 @@ class LeadsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Leads $leads)
+    public function update(Request $request)
     {
         //
 
@@ -158,8 +145,8 @@ class LeadsController extends Controller
             $data['photo']=$imageName;
         }
 
-        if(Leads::where('id', $request->input('id'))->update($data))
-            return redirect(route('pos.crm.leads'));
+        if(Specifications::where('id', $request->input('id'))->update($data))
+            return redirect(route('pos.inventory.specifications'));
 
     }
 
@@ -168,7 +155,7 @@ class LeadsController extends Controller
      */
     public function destroy(Request $request)
     {
-        $data = Leads::where('id', $request->id)->delete();
+        $data = Specifications::where('id', $request->id)->delete();
         return response()->json($data);
     }
 }
