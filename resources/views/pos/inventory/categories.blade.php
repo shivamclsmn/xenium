@@ -26,10 +26,11 @@
                                 <div class="step-app">
                                   <ul class="step-steps">
                                     <li><a href="#step1"><span class="number">1</span> Category Info</a></li>
+                                    <li><a href="#step2"><span class="number">2</span> Required Specifications</a></li>
                                   </ul>
                                   <div class="step-content">
                                     <div class="step-tab-panel" id="step1">
-                                    <input class="form-control" id="id" name="id" type="text" hidden>
+                                     <input class="form-control" id="id" name="id" type="text" hidden>
                                         <div class="row m-t-2">
                                           <div class="col-md-6">
                                             <div class="form-group">
@@ -56,6 +57,33 @@
                                           </div>
 
                                         </div>
+                                    </div>
+                                    <div class="step-tab-panel" id="step2" >
+                                      <div class="row m-t-2">
+                                        <div class="col-md-6" >
+                                          <div class="form-group">
+                                            <h4>Add Inputs</h4>
+                                              
+                                                <label id="addInput" class="btn btn-primary" >Add</label> <label id="removeInput" class="btn btn-primary" >Remove</label>
+                                                <input type="hidden" id="countInputs" value=0 name="countInputs"></input>
+                                              
+                                          </div>
+                                        </div>
+                                        <!-- <div class="col-md-6" id='dropdowns'>                                          
+                                          <div class="form-group">
+                                          <h4>Add Dropdown Inputs</h4>
+                                            <label id="addDropdown" class="btn btn-primary">Add</label> <label id="removeText" class="btn btn-primary" >Remove</label>
+                                            <input class="form-control" type="hidden" id="countDropdowns" value=0 name="countDropdowns">
+                                          </div>
+                                        </div>
+                                        <div class="col-md-6" id='booleans'>
+                                          <div class="form-group"> 
+                                            <h4>Add Boolean(Yes/No) Inputs</h4>
+                                            <label id="addBoolean" class="btn btn-primary">Add</label> <label id="removeText" class="btn btn-primary" >Remove</label>
+                                            <input class="form-control" type="hidden" id="countBooleans" value=0 name="countBooleans">
+                                          </div>
+                                        </div> -->
+                                      </div>
                                     </div>
 
                                   </div>
@@ -195,5 +223,72 @@
           $("#addEditForm").attr('action', "{{ route('pos.inventory.categories.add')}}");
           $("#addEditForm")[0].reset();
         } );
+
+
+        $("#addInput").on("click",function(){
+              var count=parseInt($("#countInputs").val())+1;
+                $("#countInputs").val(count);
+                var str="<div class='row'>";
+                str+= "<div class='col-md-4'>Name "+count+":<input class='form-control'  type='text' name='inputName-"+count+"'></input></div>";
+                str+= "<div class='col-md-3'>Type of input:<select class='form-control' id='inputType-"+count+"' onchange='typeChange("+count+")' name='inputType-"+count+"'>";
+                str+= "<option value='text'>Text</option> <option value='dropdown'>Dropdown</option> <option value='boolean'>Boolean</option> </select> </div>";    
+                str+= "<div class='col-md-3'>Status:<select class='form-control' name='inputStatus-"+count+"'>";  
+                str+= "<option value='1'>Active</option> <option value='0'>Inactive</option> </select> </div></div>";    
+                str+= "<div class='row'><div class='col-md-12' id='div"+count+"' >Value: <input  class='form-control' placeholder='Please fill default value' type='text' name='inputValue-"+count+"'></input></div></div><br><br>";
+                $("#step2").append(str);
+        });
+
+        function typeChange(count)
+        {
+          str="";
+          if($("#inputType-"+count.toString()).val()==="dropdown")
+          {
+            str="Value: <input  class='form-control'  type='text' name='inputValue-"+count+"' placeholder='Please fill options separated by comma'></input></div></div><br><br>";
+            $("#div"+count.toString()).html(str);
+          }
+          if($("#inputType-"+count.toString()).val()==="boolean")
+          {
+            str="Choose default value:<select class='form-control' name='inputValue-"+count+"'> <option value='1'>Yes</option> <option value='0'>No</option></select></div></div><br><br>";
+            $("#div"+count.toString()).html(str);
+          }
+          if($("#inputType-"+count.toString()).val()==="text")
+          {
+            str="Value: <input  class='form-control'  type='text' name='inputValue-"+count+"' placeholder='Please fill default value'></input></div></div><br><br>";
+            $("#div"+count.toString()).html(str);
+          }
+          
+        }
+        // $("#addDropdown").click(function(){
+        //   var count1=parseInt($("#countDropdowns").val())+1;
+        //         $("#countDropdowns").val(count1);            
+        //         $("#dropdowns").append("Name "+count1+": <input class='form-control'  type='text' name='text-"+count1+"'></input><br>");
+        // });
+        // $("#addBoolean").click(function(){
+        //   var count2=parseInt($("#countBooleans").val())+1;
+        //         $("#countBooleans").val(count2);            
+        //         $("#booleans").append("Name "+count2+": <input class='form-control'  type='text' name='text-"+count2+"'></input><br>");
+        // });
+
+        // $("#removeText").on("click",function(){
+        //   var count;
+        //   if(parseInt($("#countTexts").val())>0)    
+        //    count=parseInt($("#countTexts").val())-1;
+        //         $("#countTexts").val(count);            
+        //         $("#texts").append("Name "+count+": <input class='form-control'  type='text' name='text-"+count+"'></input><br>");
+        // });
+        // $("#removeDropdown").click(function(){
+        //   var count1;
+        //   if(parseInt($("#countDropdowns").val())>0)          
+        //    count1=parseInt($("#countDropdowns").val())-1;
+        //         $("#countDropdowns").val(count1);            
+        //         $("#dropdowns").append("Name "+count1+": <input class='form-control'  type='text' name='text-"+count1+"'></input><br>");
+        // });
+        // $("#removeBoolean").click(function(){
+        //   var count2;
+        //   if(parseInt($("#countBooleans").val())>0)
+        //    count2=parseInt($("#countBooleans").val())-1;
+        //         $("#countBooleans").val(count2);            
+        //         $("#booleans").append("Name "+count2+": <input class='form-control'  type='text' name='text-"+count2+"'></input><br>");
     </script>
+
 @endsection

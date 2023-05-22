@@ -43,9 +43,32 @@ class CategoriesController extends Controller
         $data['tags']=$tags;
 
         $data['isActive']=$request->input('isActive');
-
         //dd($data);
-        if(Categories::insert($data))
+        if($cat_id=Categories::insertGetId($data))
+        {
+            if($request->input('countInputs'))
+            {
+                for($i=1;$i<=(int)$request->input('countInputs');$i++)
+                {
+                    $data_1['name']= $request->input('inputName-'.$i);
+                    $data_1['type']= $request->input('inputType-'.$i);
+                    if($data_1['type']=='dropdown')
+                    {
+                        $value=json_encode(explode(',',$request->input('inputValue-'.$i)));
+                        $data_1['content']= $value;
+                    }
+                    else
+                    $data_1['content']= $request->input('inputValue-'.$i);
+
+                    $data_1['categoryId']= $cat_id;
+                    $data_1['isActive']= $request->input('inputStatus-'.$i);
+                    Specifications::insert($data_1);
+                    //dd($data_1);
+                }
+
+            }
+
+        }
         return redirect(route('pos.inventory.categories'));
     }
 
