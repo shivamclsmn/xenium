@@ -41,7 +41,7 @@ class CategoriesController extends Controller
         $tags=json_encode(explode(',',$request->input('tags')));
         
         $data['tags']=$tags;
-
+        $data['prefix']=$request->input('categoryPrefix');
         $data['isActive']=$request->input('isActive');
         //dd($data);
         if($cat_id=Categories::insertGetId($data))

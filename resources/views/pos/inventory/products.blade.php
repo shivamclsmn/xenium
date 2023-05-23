@@ -1,13 +1,13 @@
-@extends('layouts.pos.dashboard', ['title' => 'Categories', 'module' => 'Inventory'])
+@extends('layouts.pos.dashboard', ['title' => 'Products', 'module' => 'Inventory'])
 @section('content')
 <div class="row">
     <div class="col-12">
         <div class="card">
             <div class="card-body">
                 <div class="row">
-                    <h2 class="mb-4 col-md-6 text-md-left text-center">Categories</h2>
+                    <h2 class="mb-4 col-md-6 text-md-left text-center">Products</h2>
                     <div class="mb-4 col-md-6 text-right">
-                        <button class="btn btn-primary btn-sm" id="btnNew" data-toggle="modal" data-target="#addEditModel">New Category</button>
+                        <button class="btn btn-primary btn-sm" id="btnNew" data-toggle="modal" data-target="#addEditModel">New Product</button>
                     </div>
                 </div>
                 <!-- Modal -->
@@ -21,12 +21,12 @@
                                 </button>
                             </div>
                             <div class="modal-body" id="demo">
-                                <form action={{route('pos.inventory.categories.add')}} method='post' id="addEditForm" enctype="multipart/form-data">
+                                <form action={{route('pos.inventory.products.add')}} method='post' id="addEditForm" enctype="multipart/form-data">
                                   @csrf
                                 <div class="step-app">
                                   <ul class="step-steps">
-                                    <li><a href="#step1"><span class="number">1</span> Category Info</a></li>
-                                    <li><a href="#step2"><span class="number">2</span> Required Specifications</a></li>
+                                    <li><a href="#step1"><span class="number">1</span> Product Info</a></li>
+                                    <li><a href="#step2"><span class="number">2</span> Specifications</a></li>
                                   </ul>
                                   <div class="step-content">
                                     <div class="step-tab-panel" id="step1">
@@ -34,30 +34,51 @@
                                         <div class="row m-t-2">
                                           <div class="col-md-6">
                                             <div class="form-group">
-                                              <label for="categoryName">Category Name:</label>
-                                              <input class="form-control" type="text" id="categoryName" placeholder="name" name="categoryName" required>
+                                              <label for="productName">Product Name:</label>
+                                              <input class="form-control" type="text" id="productName" placeholder="name" name="productName" required>
                                             </div>
                                           </div>
                                           <div class="col-md-6">
                                             <div class="form-group">
-                                              <label for="isActive">Is Active?</label>
-                                              <select class="form-control" name="isActive" id="isActive" required>
+                                              <label for="productCategory">Category:</label>
+                                              <select class="form-control" type="text" id="productCategory" placeholder="name" name="productCategory" required>
+                                              <option>Select Category</option>    
+                                              @foreach($categories as $category)
+                                                <option value={{$category->id}}>{{$category->name}}</option>
+                                                @endforeach
+                                              </select>
+                                            </div>
+                                          </div>
+                                          <div class="col-md-6">
+                                            <div class="form-group">
+                                              <label for="productQuantity">Quantity:</label>
+                                              <input class="form-control" type="text" id="productQuantity" placeholder="Quantity" name="productQuantity" required>
+                                            </div>
+                                          </div>                                          <div class="col-md-6">
+                                            <div class="form-group">
+                                              <label for="productName">Price:</label>
+                                              <input class="form-control" type="text" id="productPrice" placeholder="Price" name="productPrice" required>
+                                            </div>
+                                          </div>                         
+                                          <div class="col-md-6">
+                                            <div class="form-group">
+                                              <label for="isFeatured">Featured:</label>
+                                              <select class="form-control" name="isFeatured" id="isFeatured" required>
+                                                <option value=0>No</option>  
+                                                <option value=1>Yes</option>
+                                            </select>
+                                            </div>
+                                          </div>
+                                          <div class="col-md-6">
+                                            <div class="form-group">
+                                              <label for="status">Status</label>
+                                              <select class="form-control" name="status" id="status" required>
                                                 <option value=1>Yes</option>
                                                 <option value=0>No</option>
                                               </select>
                                             </div>
                                           </div>
                                         </div>
-
-                                        <div class="row">
-                                          <div class="col-md-6">
-                                            <div class="form-group">
-                                            <label for="categoryPrefix">Category prefix for stock keeping unit:</label>
-                                              <input class="form-control" type="text" id="categoryPrefix" placeholder="prefix" name="categoryPrefix" required>
-                                            </div>
-                                          </div>
-
-                                        </div>                                        
                                         <div class="row">
                                           <div class="col-md-12">
                                             <div class="form-group">
@@ -67,32 +88,15 @@
                                           </div>
 
                                         </div>
-                                  </div>
+                                    </div>
                                     <div class="step-tab-panel" id="step2" >
-                                      <div class="row m-t-2">
-                                        <div class="col-md-6" >
-                                          <div class="form-group">
-                                            <h4>Add Inputs</h4>
-                                              
-                                                <label id="addInput" class="btn btn-primary" >Add</label> <label id="removeInput" class="btn btn-primary" >Remove</label>
-                                                <input type="hidden" id="countInputs" value=0 name="countInputs"></input>
-                                              
-                                          </div>
-                                        </div>
-                                        <!-- <div class="col-md-6" id='dropdowns'>                                          
-                                          <div class="form-group">
-                                          <h4>Add Dropdown Inputs</h4>
-                                            <label id="addDropdown" class="btn btn-primary">Add</label> <label id="removeText" class="btn btn-primary" >Remove</label>
-                                            <input class="form-control" type="hidden" id="countDropdowns" value=0 name="countDropdowns">
-                                          </div>
-                                        </div>
-                                        <div class="col-md-6" id='booleans'>
-                                          <div class="form-group"> 
-                                            <h4>Add Boolean(Yes/No) Inputs</h4>
-                                            <label id="addBoolean" class="btn btn-primary">Add</label> <label id="removeText" class="btn btn-primary" >Remove</label>
-                                            <input class="form-control" type="hidden" id="countBooleans" value=0 name="countBooleans">
+                                      <div class="row m-t-2" id='specForm'>
+                                        <!-- <div class="col-md-6" >
+                                          <div class="form-group" >
+                                                                                          
                                           </div>
                                         </div> -->
+
                                       </div>
                                     </div>
 
@@ -111,8 +115,12 @@
                         <thead>
                           <tr>
                             <th>Sr. #</th>
-                            <th>Category ID</th>
-                            <th>Category Name</th>
+                            <th>SKU</th>
+                            <th>product Name</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Specifications</th>
+                            <th>Quantity</th>
                             <th>Tags</th>
                             <th>Actions</th>
                           </tr>
@@ -143,17 +151,21 @@
                 processing: true,
                 serverSide: true,
                 responsive: true,
-                ajax: "{{ route('pos.inventory.categories.table') }}",
+                ajax: "{{ route('pos.inventory.products.table') }}",
                 columns: [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                    {data: 'sku', name: 'sku'},
+                    {data: 'productName', name: 'productName'},
                     {data: 'categoryId', name: 'categoryId'},
-                    {data: 'name', name: 'name'},
+                    {data: 'price', name: 'price'},
+                    {data: 'specifications', name: 'specifications'},
+                    {data: 'quantity', name: 'quantity'},
                     {data: 'tags', name: 'tags'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ]
             });
         });
-            
+        
         $('#addBtn').on('click', function(e) {
             $.ajaxSetup({
                 headers: {
@@ -164,7 +176,7 @@
             $(".save-btn").html('<i class="fa-light fa-loader rotate"></i>');
             $.ajax({
                 data: $('#addEditForm').serialize(),
-                url: "{{ route('pos.inventory.categories.add') }}",
+                url: "{{ route('pos.inventory.products.add') }}",
                 type: 'POST',
                 dataType: 'JSON',
                 success: function(data) {
@@ -186,17 +198,17 @@
         function showData(id) {
             $.ajax({
                 data: {'id':id},
-                url: "{{ route('pos.inventory.categories.show') }}",
+                url: "{{ route('pos.inventory.products.show') }}",
                 type: 'GET',
                 dataType: 'JSON',
                 success: function(response) {
                   console.log(response);
                     $('#id').val(response.id);                  
-                    $('#categoryName').val(response.name);
+                    $('#productName').val(response.name);
                     $('#isActive').val(response.isActive);
                     $('#tags').val(response.tags);
 
-                    $("#addEditForm").attr('action', "{{ route('pos.inventory.categories.update')}}"); 
+                    $("#addEditForm").attr('action', "{{ route('pos.inventory.products.update')}}"); 
                     $('#btnSubmit').html("Update");           
                 }
             });
@@ -210,7 +222,7 @@
                 });
                 $.ajax({
                     type: 'POST',
-                    url: "{{ route('pos.inventory.categories.delete') }}",
+                    url: "{{ route('pos.inventory.products.delete') }}",
                     data: {'id': id},
                     dataType: 'JSON',
                     success: function(response) {
@@ -230,7 +242,7 @@
         } );
         $( "#btnNew" ).on( "click", function() {
           $('#btnSubmit').html("submit");
-          $("#addEditForm").attr('action', "{{ route('pos.inventory.categories.add')}}");
+          $("#addEditForm").attr('action', "{{ route('pos.inventory.products.add')}}");
           $("#addEditForm")[0].reset();
         } );
 
@@ -244,7 +256,7 @@
                 str+= "<option value='text'>Text</option> <option value='dropdown'>Dropdown</option> <option value='boolean'>Boolean</option> </select> </div>";    
                 str+= "<div class='col-md-3'>Status:<select class='form-control' name='inputStatus-"+count+"'>";  
                 str+= "<option value='1'>Active</option> <option value='0'>Inactive</option> </select> </div></div>";    
-                str+= "<div class='row'><div class='col-md-12' id='div"+count+"' >Value: <input  class='form-control' placeholder='Please fill default value' type='text' name='inputValue-"+count+"'></input></div></div><br><br>";
+                str+= "<div class='row'><div class='col-md-12' id='div"+count+"' >V                                                                                                                                                                                                                                                                                                                                                                                       alue: <input  class='form-control' placeholder='Please fill default value' type='text' name='inputValue-"+count+"'></input></div></div><br><br>";
                 $("#step2").append(str);
         });
 
@@ -268,37 +280,18 @@
           }
           
         }
-        // $("#addDropdown").click(function(){
-        //   var count1=parseInt($("#countDropdowns").val())+1;
-        //         $("#countDropdowns").val(count1);            
-        //         $("#dropdowns").append("Name "+count1+": <input class='form-control'  type='text' name='text-"+count1+"'></input><br>");
-        // });
-        // $("#addBoolean").click(function(){
-        //   var count2=parseInt($("#countBooleans").val())+1;
-        //         $("#countBooleans").val(count2);            
-        //         $("#booleans").append("Name "+count2+": <input class='form-control'  type='text' name='text-"+count2+"'></input><br>");
-        // });
-
-        // $("#removeText").on("click",function(){
-        //   var count;
-        //   if(parseInt($("#countTexts").val())>0)    
-        //    count=parseInt($("#countTexts").val())-1;
-        //         $("#countTexts").val(count);            
-        //         $("#texts").append("Name "+count+": <input class='form-control'  type='text' name='text-"+count+"'></input><br>");
-        // });
-        // $("#removeDropdown").click(function(){
-        //   var count1;
-        //   if(parseInt($("#countDropdowns").val())>0)          
-        //    count1=parseInt($("#countDropdowns").val())-1;
-        //         $("#countDropdowns").val(count1);            
-        //         $("#dropdowns").append("Name "+count1+": <input class='form-control'  type='text' name='text-"+count1+"'></input><br>");
-        // });
-        // $("#removeBoolean").click(function(){
-        //   var count2;
-        //   if(parseInt($("#countBooleans").val())>0)
-        //    count2=parseInt($("#countBooleans").val())-1;
-        //         $("#countBooleans").val(count2);            
-        //         $("#booleans").append("Name "+count2+": <input class='form-control'  type='text' name='text-"+count2+"'></input><br>");
+        $('#productCategory').on('change', function(e) { console.log($('#productCategory').val());
+            $.ajax({
+                data: {'id':$('#productCategory').val()},
+                url: "{{ route('pos.inventory.products.getSpecForm') }}",
+                type: 'GET',
+                dataType: 'JSON',
+                success: function(response) {
+                  console.log(response);
+                    $('#specForm').html(response);           
+                }
+            });
+        });
     </script>
 
 @endsection
