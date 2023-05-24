@@ -1,13 +1,13 @@
-@extends('layouts.pos.dashboard', ['title' => 'Customers', 'module' => 'CRM'])
+@extends('layouts.pos.dashboard', ['title' => 'Specifications', 'module' => 'Inventory'])
 @section('content')
 <div class="row">
     <div class="col-12">
         <div class="card">
             <div class="card-body">
                 <div class="row">
-                    <h2 class="mb-4 col-md-6 text-md-left text-center">Customers</h2>
+                    <h2 class="mb-4 col-md-6 text-md-left text-center">Specifications</h2>
                     <div class="mb-4 col-md-6 text-right">
-                        <button class="btn btn-primary btn-sm" id="btnNew" data-toggle="modal" data-target="#addEditModel">New Customer</button>
+                        <button class="btn btn-primary btn-sm" id="btnNew" data-toggle="modal" data-target="#addEditModel">New Specification</button>
                     </div>
                 </div>
                 <!-- Modal -->

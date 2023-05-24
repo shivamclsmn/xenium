@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Pos\Inventory\CategoriesController;
 use App\Http\Controllers\Pos\Inventory\SpecificationsController;
+use App\Http\Controllers\Pos\Inventory\ProductsController;
 
 Route::prefix('pos/dashboard/inventory')->group(function () {
     Route::middleware('auth')->group(function () {
@@ -20,5 +21,14 @@ Route::prefix('pos/dashboard/inventory')->group(function () {
         Route::get('/specifications/show', [SpecificationsController::class, 'edit'])->name('pos.inventory.specifications.show');
         Route::post('/specifications/delete', [SpecificationsController::class, 'destroy'])->name('pos.inventory.specifications.delete');
         Route::post('/specifications/update', [SpecificationsController::class, 'update'])->name('pos.inventory.specifications.update');
+
+        // Products
+        Route::get('/products', [ProductsController::class, 'index'])->name('pos.inventory.products');
+        Route::get('/products/dt', [ProductsController::class, 'show'])->name('pos.inventory.products.table');
+        Route::post('/products/add', [ProductsController::class, 'store'])->name('pos.inventory.products.add');
+        Route::get('/products/show', [ProductsController::class, 'edit'])->name('pos.inventory.products.show');
+        Route::post('/products/delete', [ProductsController::class, 'destroy'])->name('pos.inventory.products.delete');
+        Route::post('/products/update', [ProductsController::class, 'update'])->name('pos.inventory.products.update');
+        Route::get('/products/getSpecForm', [ProductsController::class, 'getSpecForm'])->name('pos.inventory.products.getSpecForm');
     });
 });

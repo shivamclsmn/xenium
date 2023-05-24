@@ -18,7 +18,7 @@ class SpecificationsController extends Controller
     public function index()
     {
         //
-        $data = Specifications::where('isDealer','0')->get();
+        $data = Specifications::get();
         return view('pos.inventory.specifications', compact('data'));
     }
 
