@@ -89,6 +89,15 @@ class PositionsController extends Controller
     public function update(Request $request, Positions $positions)
     {
         //
+        $data['id']=$request->input('id');
+        $data['position']=$request->input('position');
+        $data['max_pos']=$request->input('max_pos');
+        $data['details']=$request->input('details');
+        if(Positions::where('id', $data['id'])->update($data))
+        {
+            return redirect(route('pos.hrms.positions'));
+        }
+
     }
 
     /**
