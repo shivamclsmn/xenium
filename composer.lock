@@ -567,6 +567,7 @@
         },
         {
             "name": "guzzlehttp/guzzle",
+
             "version": "7.7.0",
             "source": {
                 "type": "git",
@@ -577,6 +578,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/guzzle/guzzle/zipball/fb7566caccf22d74d1ab270de3551f72a58399f5",
                 "reference": "fb7566caccf22d74d1ab270de3551f72a58399f5",
+
                 "shasum": ""
             },
             "require": {
@@ -673,7 +675,9 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/guzzle/issues",
+
                 "source": "https://github.com/guzzle/guzzle/tree/7.7.0"
+
             },
             "funding": [
                 {
@@ -690,6 +694,7 @@
                 }
             ],
             "time": "2023-05-21T14:04:53+00:00"
+
         },
         {
             "name": "guzzlehttp/promises",
@@ -976,6 +981,7 @@
         },
         {
             "name": "laravel/framework",
+
             "version": "v10.11.0",
             "source": {
                 "type": "git",
@@ -986,6 +992,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/laravel/framework/zipball/21a5b6d9b669f32c10cc8ba776511b5f62599fea",
                 "reference": "21a5b6d9b669f32c10cc8ba776511b5f62599fea",
+
                 "shasum": ""
             },
             "require": {
@@ -1172,6 +1179,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
+
             "time": "2023-05-16T13:59:23+00:00"
         },
         {
