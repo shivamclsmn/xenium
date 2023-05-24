@@ -36,12 +36,13 @@
                                             <div class="form-group">
                                               <label for="productName">Product Name:</label>
                                               <input class="form-control" type="text" id="productName" placeholder="name" name="productName" required>
+                                              <input class="form-control" type="hidden" id="productId" placeholder="name" name="productId">
                                             </div>
                                           </div>
                                           <div class="col-md-6">
                                             <div class="form-group">
                                               <label for="productCategory">Category:</label>
-                                              <select class="form-control" type="text" id="productCategory" placeholder="name" name="productCategory" required>
+                                              <select class="form-control" type="text" onchange='getSpecForm()' id="productCategory" placeholder="name" name="productCategory" required>
                                               <option>Select Category</option>    
                                               @foreach($categories as $category)
                                                 <option value={{$category->id}}>{{$category->name}}</option>
@@ -156,7 +157,7 @@
                     {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                     {data: 'sku', name: 'sku'},
                     {data: 'productName', name: 'productName'},
-                    {data: 'categoryId', name: 'categoryId'},
+                    {data: 'categoryName', name: 'categoryName'},
                     {data: 'price', name: 'price'},
                     {data: 'specifications', name: 'specifications'},
                     {data: 'quantity', name: 'quantity'},
@@ -204,12 +205,17 @@
                 success: function(response) {
                   console.log(response);
                     $('#id').val(response.id);                  
-                    $('#productName').val(response.name);
-                    $('#isActive').val(response.isActive);
+                    $('#productName').val(response.productName);
+                    $('#productId').val(response.id);
+                    $('#sku').val(response.sku);
+                    $('#status').val(response.status);
                     $('#tags').val(response.tags);
-
+                    $('#productCategory').val(response.categoryId);
+                    $('#productPrice').val(response.price);
+                    $('#productQuantity').val(response.quantity);
                     $("#addEditForm").attr('action', "{{ route('pos.inventory.products.update')}}"); 
-                    $('#btnSubmit').html("Update");           
+                    $('#btnSubmit').html("Update");  
+                    getSpecForm();         
                 }
             });
         }
@@ -244,21 +250,8 @@
           $('#btnSubmit').html("submit");
           $("#addEditForm").attr('action', "{{ route('pos.inventory.products.add')}}");
           $("#addEditForm")[0].reset();
+          $("#productId").val('');
         } );
-
-
-        $("#addInput").on("click",function(){
-              var count=parseInt($("#countInputs").val())+1;
-                $("#countInputs").val(count);
-                var str="<div class='row'>";
-                str+= "<div class='col-md-4'>Name "+count+":<input class='form-control'  type='text' name='inputName-"+count+"'></input></div>";
-                str+= "<div class='col-md-3'>Type of input:<select class='form-control' id='inputType-"+count+"' onchange='typeChange("+count+")' name='inputType-"+count+"'>";
-                str+= "<option value='text'>Text</option> <option value='dropdown'>Dropdown</option> <option value='boolean'>Boolean</option> </select> </div>";    
-                str+= "<div class='col-md-3'>Status:<select class='form-control' name='inputStatus-"+count+"'>";  
-                str+= "<option value='1'>Active</option> <option value='0'>Inactive</option> </select> </div></div>";    
-                str+= "<div class='row'><div class='col-md-12' id='div"+count+"' >V                                                                                                                                                                                                                                                                                                                                                                                       alue: <input  class='form-control' placeholder='Please fill default value' type='text' name='inputValue-"+count+"'></input></div></div><br><br>";
-                $("#step2").append(str);
-        });
 
         function typeChange(count)
         {
@@ -280,18 +273,21 @@
           }
           
         }
-        $('#productCategory').on('change', function(e) { console.log($('#productCategory').val());
+
+        function getSpecForm()
+        {
             $.ajax({
-                data: {'id':$('#productCategory').val()},
+                data: {'id':$('#productCategory').val()+', '+$('#productId').val()},
+
                 url: "{{ route('pos.inventory.products.getSpecForm') }}",
                 type: 'GET',
                 dataType: 'JSON',
                 success: function(response) {
-                  console.log(response);
+                  
                     $('#specForm').html(response);           
                 }
             });
-        });
+        }
     </script>
 
 @endsection
