@@ -30,5 +30,8 @@ Route::prefix('pos/dashboard/inventory')->group(function () {
         Route::post('/products/delete', [ProductsController::class, 'destroy'])->name('pos.inventory.products.delete');
         Route::post('/products/update', [ProductsController::class, 'update'])->name('pos.inventory.products.update');
         Route::get('/products/getSpecForm', [ProductsController::class, 'getSpecForm'])->name('pos.inventory.products.getSpecForm');
+        Route::post('/products/addUpdateImages', [ProductsController::class, 'addUpdateImages'])->name('pos.inventory.products.addUpdateImages');
+        Route::get('/products/getProductImages', [ProductsController::class, 'getProductImages'])->name('pos.inventory.products.getProductImages');
+        Route::get('/products/delImage', [ProductsController::class, 'delImage'])->name('pos.inventory.products.delImage');
     });
 });
