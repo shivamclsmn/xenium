@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Inventory\Specifications;
 use App\Models\Inventory\Products;
 use App\Models\Inventory\Categories;
+use App\Models\Inventory\ProductImages;
 use Illuminate\Http\Request;
 use DataTables;
 use Illuminate\Http\JsonResponse;
@@ -90,7 +91,10 @@ class ProductsController extends Controller
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function($row){
-                    $actionBtn = '<button onclick="showData('.$row->id.')" data-toggle="modal" data-target="#addEditModel" class="edit btn btn-success btn-sm"><i class="fa-light fa-edit"></i></button> <button onclick="delData('.$row->id.')" class="delete btn btn-danger btn-sm"><i class="fa-light fa-trash"></i></button>';
+                    $actionBtn = 
+                    '<button onclick="getProductImages('.$row->id.')" data-toggle="modal" data-target="#addUpdateImageModel" class="delete btn btn-primary btn-sm"><i class="fa-light fa-image"></i></button>
+                    <button onclick="showData('.$row->id.')" data-toggle="modal" data-target="#addEditModel" class="edit btn btn-success btn-sm"><i class="fa-light fa-edit"></i></button> 
+                    <button onclick="delData('.$row->id.')" class="delete btn btn-danger btn-sm"><i class="fa-light fa-trash"></i></button>';
                     return $actionBtn;
                 })
                 ->rawColumns(['action'])
@@ -152,8 +156,11 @@ class ProductsController extends Controller
      */
     public function destroy(Request $request)
     {
-        $data = Products::where('id', $request->id)->delete();
-        return response()->json($data);
+        if(Products::where('id', $request->id)->delete())
+        return response()->json(['status'=>'success','data'=>$request->id],200);
+        else
+        return response()->json(['status'=>'failed','data'=>$request->id],500);
+
     }
 
     public function getSpecForm(Request $request)
@@ -305,6 +312,43 @@ class ProductsController extends Controller
         
         
         return $formItems;
+    }
+    public function addUpdateImages(Request $request)
+    {
+        if($request->productImages)
+        {
+            $request->validate([
+                'productImages' => 'required',
+                'productImages.*' => 'image|mimes:jpeg,png,jpg|max:2048',
+            ]);
+            
+            $i=1;
+            foreach($request->productImages as $image)
+            {
+
+                $imageName = $i++.'pImg'.time().'.'.$image->extension();  
+                if($image->move(public_path('productImages'), $imageName))
+                $data['image']=$imageName;
+                $data['productId']=$request->input('productId-1');
+
+                ProductImages::insert($data);
+            }
+
+        }
+        return redirect(route('pos.inventory.products'));
+    }
+    public function getProductImages(Request $request)
+    {
+        $id = $request->all();
+
+        $images=ProductImages::where('productId',$id)->get();
+
+        return response()->json($images);
+    }
+    public function delImage(Request $request)
+    {
+        ProductImages::where('id', $request->id)->delete();
+        return redirect(route('pos.inventory.products'));
     }
 }
 
