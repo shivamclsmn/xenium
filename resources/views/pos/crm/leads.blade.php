@@ -25,32 +25,62 @@
                                   @csrf
                                 <div class="step-app">
                                   <ul class="step-steps">
-                                    <li><a href="#step1"><span class="number">1</span> Personal Info</a></li>
-                                    <li><a href="#step2"><span class="number">2</span> Contact Info</a></li>
-                                    <li><a href="#step3"><span class="number">3</span> Customer Type Info</a></li>
+                                    <li><a href="#step1"><span class="number">1</span> Lead Info</a></li>
+                                    <li><a href="#step2"><span class="number">2</span> Other Details</a></li>
                                   </ul>
                                   <div class="step-content">
                                     <div class="step-tab-panel" id="step1">
                                     <input class="form-control" id="id" name="id" type="text" hidden>
+
                                         <div class="row m-t-2">
-                                          <div class="col-md-6">
+                                        <div class="col-md-6">
                                             <div class="form-group">
-                                              <label for="firstName1">Full Name:</label>
-                                              <input class="form-control" type="text" id="fullname" placeholder="Full Name" name="fullname" required>
+                                              <label for="lastName1">Phone Number:</label>
+                                              <input type="hidden" name="mobile" id="customerId" >
+                                              <input class="form-control" type="text" placeholder="Mobile" name="mobile" id="mobile" pattern="[0-9]{10}" required>
+                                              <ul class="list-group" id='customers'></ul>
                                             </div>
                                           </div>
-                                        </div>
-                                        <div class="row">
                                           <div class="col-md-6">
                                             <div class="form-group">
                                               <label for="firstName1">Email Address:</label>
                                               <input class="form-control" type="text" placeholder="Email" name="email" id="email">
                                             </div>
                                           </div>
+
+                                        </div>
+                                        <div class="row">
                                           <div class="col-md-6">
                                             <div class="form-group">
-                                              <label for="lastName1">Phone Number:</label>
-                                              <input class="form-control" type="text" placeholder="Mobile" name="mobile" id="mobile" pattern="[0-9]{10}" required>
+                                              <label for="firstName1">Full Name:</label>
+                                              <input class="form-control" type="text" id="fullname" placeholder="Full Name" name="fullname" required>
+                                            </div>
+                                          </div>
+                                          <div class="col-md-6">
+                                            <div class="form-group">
+                                              <label for="location">Location:</label>
+                                              <input class="form-control" type="text" id="location" name="location" required>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div class="row">
+                                          <div class="col-md-12">
+                                            <div class="form-group">
+                                              <label for="description">Select Products:</label>
+                                              <input type='hidden' name="products" id="products" value=''>
+                                              <div class="form-control" style="height:60px" id="productArea">
+
+                                              </div>
+                                             <input class="form-control" type='text' name="productTyping" id="productTyping" value='' placeholder="Type product name to search">                                                 
+                                              <ul class="list-group" id='productList'></ul>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div class="row">
+                                          <div class="col-md-12">
+                                            <div class="form-group">
+                                              <label for="description">Query/Lead description:</label>
+                                              <textarea class="form-control" type="text" id="description" name="description" ></textarea>
                                             </div>
                                           </div>
                                         </div>
@@ -76,14 +106,12 @@
                                           </div>
                                         </div>
                                       </div>
-                                    </div>
-                                    
-                                    <div class="step-tab-panel" id="step3">
+
                                       <div class="row m-t-2">
                                         <div class="col-md-6">
                                           <div class="form-group">
                                           <label for="isDealer">Type of customer</label><br>
-                                          <input type="radio" id="customer" name="isDealer" value=0 checked>
+                                          <input type="radio" id="customer" name="isDealer" value=0 >
                                           <label for="customer">Customer</label><br>
                                           <input type="radio" id="dealer" name="isDealer" value=1 >
                                           <label for="dealer">Dealer</label><br>                                                                    
@@ -112,6 +140,7 @@
                             <th>Lead ID</th>
                             <th>Personal Info</th>
                             <th>Contact Info</th>
+                            <th>Description</th>
                             <th>Actions</th>
                           </tr>
                         </thead>
@@ -147,6 +176,7 @@
                     {data: 'lead_id', name: 'lead_id'},
                     {data: 'personal_info', name: 'personal_info'},
                     {data: 'contact_info', name: 'contact_info'},
+                    {data: 'description', name: 'description'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ]
             });
@@ -232,5 +262,82 @@
           $('#btnSubmit').html("submit");
           $("#addEditForm").attr('action', "{{ route('pos.crm.leads.add')}}");
         } );
+
+
+          $("#mobile").keyup(function(){
+            if($('#mobile').val().length==0)$('#customers').html('');
+            else
+            $.ajax({
+
+              type:'GET',
+              url: "{{ route('pos.crm.leads.getCustomersSearch') }}",
+              data: {'mobile':$('#mobile').val()},
+              dataType:'JSON',
+              success: function(response){
+
+                console.log(response);
+
+                $("#customers").html(response);
+              }
+            }); 
+        });
+
+        $("#productTyping").keyup(function(){
+            if($('#productTyping').val().length==0)$('#productList').html('');
+            else
+            $.ajax({
+
+              type:'GET',
+              url: "{{ route('pos.crm.leads.getProductsSearch') }}",
+              data: {'product':$('#productTyping').val()},
+              dataType:'JSON',
+              success: function(response){
+
+                console.log(response);
+
+                $("#productList").html(response);
+              }
+            }); 
+        });
+
+        function getCustomerDetails(id){
+          $.ajax({
+                data: {'id':id},
+                url: "{{ route('pos.crm.customers.show') }}",
+                type: 'GET',
+                dataType: 'JSON',
+                success: function(response) {
+                  console.log(response);
+                    $('#id').val(response.id);                  
+                    $('#fullname').val(response.full_name);
+                    $('#mobile').val(response.mobile);
+                    $('#email').val(response.email);
+                    $('#address').val(response.address);
+                    $('#city').val(response.city);              
+                    (response.isDealer)?  $('#dealer').prop('checked',true): $('#customer').prop('checked',true);
+                    $("#customers").html('');         
+                }
+              });
+        }
+        
+        function productListing(id){
+          if($('#p**'+id.toString()).prop("selected"))  $('#p**'+id.toString()).prop("selected",false);
+          else $('#p**'+id.toString()).prop("selected",true);
+        }
+        function addProduct(id,productName){
+         
+          if(!$("#products").val().includes('-'+id+'-'))
+          {
+            $("#products").val($("#products").val()+'-'+id.toString()+'-');
+          $("#productArea").append(' <span class="bg-light px-1 py-1 w-25" id="pShow*'+id+'">'+productName+'&nbsp&nbsp <i class="fa fa-close" onclick="removeProduct('+id+')"></i><span>&nbsp');  
+          }
+          
+        }
+        function removeProduct(id){
+          document.getElementById('pShow*'+id).remove();
+          let str=$("#products").val();
+          str=str.replace("-"+id+"-", "");
+          $("#products").val(str);
+        }
     </script>
 @endsection

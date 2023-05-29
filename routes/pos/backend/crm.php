@@ -30,6 +30,8 @@ Route::prefix('pos/dashboard/crm')->group(function () {
         Route::get('/leads/show', [LeadsController::class, 'edit'])->name('pos.crm.leads.show');
         Route::post('/leads/delete', [LeadsController::class, 'destroy'])->name('pos.crm.leads.delete');
         Route::post('/leads/update', [LeadsController::class, 'update'])->name('pos.crm.leads.update');
+        Route::get('/leads/getCustomersSearch', [LeadsController::class, 'getCustomersSearch'])->name('pos.crm.leads.getCustomersSearch');
+        Route::get('/leads/getProductsSearch', [LeadsController::class, 'getProductsSearch'])->name('pos.crm.leads.getProductsSearch');
 
         //Lead History routes
         Route::get('/leads_history', [Leads_historyController::class, 'index'])->name('pos.crm.leads_history');
