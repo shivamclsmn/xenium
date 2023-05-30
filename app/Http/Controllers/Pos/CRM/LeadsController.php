@@ -5,7 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Models\CRM\Leads;
 use App\Models\CRM\Customers;
 use App\Models\Inventory\Products;
-use App\Models\CRM\Leads_source;
+use App\Models\CRM\Leads_history;
 use App\Models\User;
 use Illuminate\Http\Request;
 use DataTables;
@@ -66,7 +66,7 @@ class LeadsController extends Controller
         if($request->input('customerId'))
         {
             $data['customer_id']=$request->input('customerId');
-            Leads::insert($data);
+            $leadId=Leads::insertGetId($data);
         }
         else
         {
@@ -77,8 +77,16 @@ class LeadsController extends Controller
 
             $id=Customers::insertGetId($data_1);
             $data['customer_id']=$id;
-            Leads::insert($data);
+            $leadId=Leads::insertGetId($data);
         }
+        $data_2['commentType']= $request->input('commentType');
+        $data_2['comment']= $request->input('comment');
+        $data_2['status']= $request->input('status');
+        $data_2['user_id']=($request->input('userAssigned'))? $request->input('userAssigned') : (Auth::user()->id);
+        $data_2['nextCallingDate']= $request->input('nextCallingDate');
+        $data_2['lead_id']= $leadId;
+        Leads_history::insert($data_2);
+
         return redirect(route('pos.crm.leads'));
     }
 
@@ -96,7 +104,7 @@ class LeadsController extends Controller
                         'customers.mobile',
                         'customers.email',
                         'customers.address')
-                        ->orderBy('customer_id','desc')->get();
+                        ->orderBy('nextCallingDate','asc')->get();
                         
 
             return Datatables::of($data)
@@ -115,7 +123,10 @@ class LeadsController extends Controller
                     return $row->address;
                 })
                 ->addColumn('action', function($row){
-                    $actionBtn = '<button onclick="showData('.$row->id.')" data-toggle="modal" data-target="#addEditModel" class="edit btn btn-success btn-sm"><i class="fa-light fa-edit"></i></button> <button onclick="delData('.$row->id.')" class="delete btn btn-danger btn-sm"><i class="fa-light fa-trash"></i></button>';
+                    $actionBtn = 
+                    '<button id="viewHistory" data-toggle="modal" data-target="#leadHistoryModal" class="edit btn btn-info btn-sm">View History</button>
+                    <button onclick="showData('.$row->id.')" data-toggle="modal" data-target="#addEditModel" class="edit btn btn-success btn-sm"><i class="fa-light fa-edit"></i></button> 
+                    <button onclick="delData('.$row->id.')" class="delete btn btn-danger btn-sm"><i class="fa-light fa-trash"></i></button>';
                     return $actionBtn;
                 })
                 ->rawColumns(['action'])
@@ -129,11 +140,23 @@ class LeadsController extends Controller
      */
     public function edit(Request $request)
     {
-        //
         $id = $request->all();
-        $data = Leads::where('id', $id)->get();    
+        $data['lead'] = Leads::where('leads.id', $id)->get()->first();
+        //$data['lead']->product_ids=join(',',json_decode($data[0]->tags, true));
+        $products=json_decode($data['lead']->product_ids, true);
+        if(count($products)>0)
+        {
+            $str='';
+            foreach($products as $product)
+            {
+                $pname=Products::where('id',str_replace("\"",'',$product))->get()->first()->productName;
+                $str.='<span class="border bg-light px-1 py-1 w-25" >'.$pname.'<span>&nbsp&nbsp';
+            }
+            $data['lead']->product_ids=$str;
+        }
 
-        return response()->json($data[0]);
+        $data['customer'] = Customers::where('id', $data['lead']->first()->customer_id)->get()->first();
+        return response()->json($data);
     }
 
     /**
@@ -141,34 +164,15 @@ class LeadsController extends Controller
      */
     public function update(Request $request, Leads $leads)
     {
-        //
-
-        $data['full_name']=$request->input('fullname');
-        $data['mobile']=$request->input('mobile');
-        $data['email']=$request->input('email');
-        $data['address']=$request->input('address');
-        $data['pincode']=$request->input('pincode');
-        $data['city']=$request->input('city');
-        $data['location']=$request->input('location');
-        $data['source']=$request->input('source');
-        $data['isDealer']=$request->input('isDealer');
-        // $data['lastlogin']=Carbon::now()->toDateTimeString();
-        // $data['lastlogin_ip']=$request->getClientIp();
-        // $data['email_verified']=$request->input('email_verified');
-        // $data['mobile_verified']=$request->input('mobile_verified');
+        $data['commentType']= $request->input('commentType');
+        $data['comment']= $request->input('comment');
+        $data['status']= $request->input('status');
+        $data['user_id']=($request->input('userAssigned'))? $request->input('userAssigned') : (Auth::user()->id);
+        $data['nextCallingDate']= $request->input('nextCallingDate');
+        $data['lead_id']= $request->input('id');
 
 
-        if($request->file('photo'))
-        {
-            $request->validate([
-                'photo' => 'image|mimes:jpeg,png,jpg|max:2048',
-            ]);
-            $imageName = 'emp'.time().'.'.$request->photo->extension();  
-            if($request->photo->move(public_path('customerphotos'), $imageName))
-            $data['photo']=$imageName;
-        }
-
-        if(Leads::where('id', $request->input('id'))->update($data))
+        if(Leads_history::insert($data))
             return redirect(route('pos.crm.leads'));
 
     }

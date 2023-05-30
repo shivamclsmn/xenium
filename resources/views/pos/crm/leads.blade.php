@@ -26,7 +26,7 @@
                                 <div class="step-app">
                                   <ul class="step-steps">
                                     <li><a href="#step1"><span class="number">1</span> Lead Info</a></li>
-                                    <li><a href="#step2"><span class="number">2</span> Lead History</a></li>
+                                    <li><a href="#step2"><span class="number">2</span> Lead Action</a></li>
                                   </ul>
                                   <div class="step-content">
                                     <div class="step-tab-panel" id="step1">
@@ -130,7 +130,7 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                               <label for="nextCallingDate">Status:</label>
-                                              <select class="form-control"  id="source" name="source" >
+                                              <select class="form-control"  id="status" name="status" >
                                                 <option value=1 >Hot</option>
                                                 <option value=2 >Mild</option>
                                                 <option value=3 >Cold</option>
@@ -150,6 +150,17 @@
 
                                             </div>
                                           </div>
+
+                                          <div class="col-md-3">
+                                            <div class="form-group">
+                                              <label for="nextCallingDate">Next Calling Date:</label>
+                                              @php 
+                                              $date = strtotime("+1 day", strtotime("now"));
+                                              $date= date("Y-m-d", $date);
+                                              @endphp
+                                              <input type="date" class="form-control"  id="nextCallingDateHistory" name="nextCallingDate" value="{{$date}}" disabled>
+                                            </div>
+                                          </div>
                                       </div>
                                     </div>
                                   </div>
@@ -164,6 +175,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="table-responsive">
                     <table id="datatable" class="table table-bordered table-hover table-sm">
                         <thead>
@@ -173,6 +185,7 @@
                             <th>Personal Info</th>
                             <th>Contact Info</th>
                             <th>Description</th>
+                            <th>Next Calling Date</th>
                             <th>Actions</th>
                           </tr>
                         </thead>
@@ -180,6 +193,28 @@
                             
                         </tbody>
                     </table>
+                </div>
+                <div class="modal-body" id="leadHistoryModal">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                         <div class="table-responsive">
+                            <table id="leadHistoryDatatable" class="table table-bordered table-hover table-sm">
+                                <thead>
+                                  <tr>
+                                    <th>Sr.#</th>
+                                    <th>ID</th>
+                                    <th>Lead ID</th>
+                                    <th>Comment</th>
+                                    <th>Assigned User</th>
+                                    <th>Comment Type</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                </tbody>
+                              </table>
+                         </div>
+                        </div>
                 </div>
             </div>
         </div>
@@ -209,11 +244,32 @@
                     {data: 'personal_info', name: 'personal_info'},
                     {data: 'contact_info', name: 'contact_info'},
                     {data: 'description', name: 'description'},
+                    {data: 'nextCallingDate', name: 'nextCallingDate'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ]
             });
         });
             
+        $("#viewHistory").on('click',function(){
+          var table = $('#datatable').DataTable({
+                paging: true,
+                retrieve: true,
+                processing: true,
+                serverSide: true,
+                responsive: true,
+                ajax: "{{ route('pos.crm.leads.table') }}",
+                columns: [
+                    {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                    {data: 'lead_id', name: 'lead_id'},
+                    {data: 'personal_info', name: 'personal_info'},
+                    {data: 'contact_info', name: 'contact_info'},
+                    {data: 'description', name: 'description'},
+                    {data: 'nextCallingDate', name: 'nextCallingDate'},
+                    {data: 'action', name: 'action', orderable: false, searchable: false},
+                ]
+            });
+        });
+
         $('#addBtn').on('click', function(e) {
             $.ajaxSetup({
                 headers: {
@@ -251,15 +307,28 @@
                 dataType: 'JSON',
                 success: function(response) {
                   console.log(response);
-                    $('#id').val(response.id);                  
-                    $('#fullname').val(response.full_name);
-                    $('#mobile').val(response.mobile);
-                    $('#email').val(response.email);
-                    $('#address').val(response.address);
-                    $('#city').val(response.city);
+                    $('#id').val(response.lead.id);    
+                    $('#source').val(response.lead.source_id);        
+                    $("#productArea").html(response.lead.product_ids);           
+                    $('#description').val(response.lead.description);  
+                    $('#fullname').val(response.customer.full_name);
+                    $('#mobile').val(response.customer.mobile);
+                    $('#email').val(response.customer.email);
+                    $('#location').val(response.customer.location);  
 
                     $("#addEditForm").attr('action', "{{ route('pos.crm.leads.update')}}"); 
-                    $('#btnSubmit').html("Update");           
+                    $('#btnSubmit').html("Update");
+                    $('#step2').prop('disabled',true);
+                    $('#fullname').prop('disabled',true);
+                    $('#mobile').prop('disabled',true);
+                    $('#email').prop('disabled',true);
+                    $('#location').prop('disabled',true);            
+                    $('#nextCallingDate').prop('disabled',true);
+                    $('#source').prop('disabled',true);
+                    $('#productTyping').prop('disabled',true);
+                    $('#description').prop('disabled',true);
+
+                    $('#nextCallingDateHistory').prop('disabled',false);
                 }
             });
         }
@@ -392,5 +461,8 @@
         function selectUser(id){
           $("#userAssigned").val(id);
         }
+        $("#nextCallingDate").on('change',function(){
+          $("#nextCallingDateHistory").val($("#nextCallingDate").val());
+        });
     </script>
 @endsection
