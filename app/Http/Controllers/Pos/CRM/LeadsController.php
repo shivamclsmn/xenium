@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Pos\CRM;
 use App\Http\Controllers\Controller;
 use App\Models\CRM\Leads;
 use App\Models\CRM\Customers;
+use App\Models\Inventory\Products;
 use App\Models\CRM\Leads_source;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -11,6 +12,7 @@ use DataTables;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class LeadsController extends Controller
 {
@@ -21,8 +23,12 @@ class LeadsController extends Controller
     {
         //
         //$customers = Leads::where('isDealer','0')->get();
-        $customers = DB::table('customers')->where('isDealer','0')->get();
-        return view('pos.crm.leads', compact('customers'));
+        $leads = Leads::leftjoin('customers','leads.customer_id','=','customers.id')
+                    ->select('leads.*','customers.id as customerId', 'customers.full_name',
+                    'customers.mobile','customers.email','customers.address', 'customers.pincode',
+                    'customers.city','customers.location')    
+                    ->get();
+        return view('pos.crm.leads', compact('leads'));
     }
 
     /**
@@ -39,36 +45,40 @@ class LeadsController extends Controller
      */
     public function store(Request $request)
     {
-        $data['full_name']=$request->input('fullname');
-        $data['mobile']=$request->input('mobile');
-        $data['email']=$request->input('email');
-        $data['address']=$request->input('address');
-        $data['pincode']=$request->input('pincode');
-        $data['city']=$request->input('city');
-        $data['location']=$request->input('location');
-        $data['source']=$request->input('source');
-        $data['isDealer']=$request->input('isDealer');
-        // $data['email_verified']=$request->input('email_verified');
-        // $data['mobile_verified']=$request->input('mobile_verified');
-        // $data['lastlogin']=Carbon::now()->toDateTimeString();
-        // $data['lastlogin_ip']=$request->getClientIp();
-        //dd($request->file('photo'));
-        if($request->file('photo'))
+        $data['source_id']=$request->input('source');
+       // $data['isDealer']=$request->input('isDealer');
+        $data['description']=$request->input('description');
+        $data['status']=1;
+        $data['nextCallingDate']=$request->input('nextCallingDate');
+        if($request->input('products'))
         {
-            $request->validate([
-                'photo' => 'image|mimes:jpeg,png,jpg|max:2048',
-            ]);
-        
-            $imageName = 'customer'.time().'.'.$request->photo->extension();  
-            if($request->photo->move(public_path('customerphotos'), $imageName))
-            $data['photo']=$imageName;
+            $str="-".$request->input('products')."-";
+            $products = explode("--",$str);
+            unset($products[count($products)-1]);
+            unset($products[0]);
+            $products=array_values($products);
+            $data['product_ids']=json_encode($products);
         }
-        if($request->input('password')&&$request->input('password_confirmation')&&$request->input('email'))
+
+        $data['nextCallingDate']=$request->input('nextCallingDate');
+        $data['user_id'] = Auth::user()->id;
+
+        if($request->input('customerId'))
         {
-            $data['password']=$request->input('password');
+            $data['customer_id']=$request->input('customerId');
+            Leads::insert($data);
         }
-        //dd($request->input());
-        if(Leads::insert($data))
+        else
+        {
+            $data_1['location']=$request->input('location');
+            $data_1['full_name']=$request->input('fullname');
+            $data_1['mobile']=$request->input('mobile');
+            $data_1['email']=$request->input('email');
+
+            $id=Customers::insertGetId($data_1);
+            $data['customer_id']=$id;
+            Leads::insert($data);
+        }
         return redirect(route('pos.crm.leads'));
     }
 
@@ -80,14 +90,14 @@ class LeadsController extends Controller
         //
         if ($request->ajax()) {
 
-            $data = DB::table('customers')
-                        ->join('leads','customers.id','=','leads.customer_id')
-                        ->select('leads.id as id','customers.id as customer_id',
+            $data = Leads::leftjoin('customers','customers.id','=','leads.customer_id')
+                        ->select('leads.*','customers.id as custtomerId',
                         'customers.full_name',
                         'customers.mobile',
                         'customers.email',
                         'customers.address')
                         ->orderBy('customer_id','desc')->get();
+                        
 
             return Datatables::of($data)
                 ->addIndexColumn()
@@ -168,7 +178,47 @@ class LeadsController extends Controller
      */
     public function destroy(Request $request)
     {
-        $data = Leads::where('id', $request->id)->delete();
+        $data = Leads::where('id', $request->mobile)->delete();
         return response()->json($data);
+    }
+    public function getCustomersSearch(Request $request)
+    {
+            $customers = Customers::where('mobile','like', '%'. $request->mobile .'%')->get();
+
+        $customersMatch='';
+        foreach($customers as $customer){
+            $customersMatch.='<li class="list-group-item list-group-item-action" onclick="getCustomerDetails('.$customer->id.')">';
+            $customersMatch.=preg_replace("/".$request->mobile."/i", '<strong style="color:black;">'.$request->mobile.'</strong>', $customer->mobile);
+            $customersMatch.=' - '.$customer->full_name;
+            $customersMatch.='</li>';
+        }
+        return response()->json($customersMatch);
+    }
+    public function getProductsSearch(Request $request)
+    {
+            $products = Products::where('productName','like', '%'. $request->product .'%')
+                                    ->orWhere('sku','like', '%'. $request->product .'%')->get();
+
+        $productsMatch='';
+        foreach($products as $product){
+            $productsMatch.= '<li class="list-group-item list-group-item-action" id="p**'.$product->id.'" onclick="addProduct('.$product->id.',\''.$product->productName.'\')">';
+            $productsMatch.= preg_replace("/".$request->product."/i", '<strong style="color:black;">'.$request->product.'</strong>', $product->sku);
+            $productsMatch.= ' - '.preg_replace("/".$request->product."/i",'<strong style="color:black;">'.$request->product.'</strong>', $product->productName);
+            $productsMatch.= '</li>';
+        }
+        return response()->json($productsMatch);
+    }
+    public function getUsersSearch(Request $request)
+    {
+            $users = User::where('name','like', '%'. $request->user .'%')
+                                    ->get();
+
+        $usersMatch='';
+        foreach($users as $user){
+            $usersMatch.= '<li class="list-group-item list-group-item-action" id="u**'.$user->id.'" onclick="selectUser('.$user->id.',\''.$user->userName.'\')">';
+            $usersMatch.= preg_replace("/".$request->user."/i",'<strong style="color:black;">'.$request->user.'</strong>', $user->name);
+            $usersMatch.= '</li>';
+        }
+        return response()->json($usersMatch);
     }
 }
