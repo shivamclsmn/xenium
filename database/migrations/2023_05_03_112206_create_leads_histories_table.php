@@ -14,11 +14,12 @@ return new class extends Migration
         Schema::create('leads_histories', function (Blueprint $table) {
             $table->id();
 
-            $table->string('description');
-            $table->tinyinteger('status');
+            $table->string('comment');
+            $table->tinyInteger('status');
             $table->date('nextCallingDate');
             $table->unsignedBigInteger('lead_id')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
+            $table->boolean('commentType');//to declare the comment either as the User Comment or as the Customer Comment
             
             $table->timestamps();
             $table->softDeletes();

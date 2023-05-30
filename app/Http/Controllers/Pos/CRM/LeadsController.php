@@ -12,6 +12,7 @@ use DataTables;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class LeadsController extends Controller
 {
@@ -44,42 +45,40 @@ class LeadsController extends Controller
      */
     public function store(Request $request)
     {
-      //  $data['mobile']=$request->input('mobile');
-      //  $data['email']=$request->input('email');
-       // $data['address']=$request->input('address');
-     //   $data['pincode']=$request->input('pincode');
-     //   $data['city']=$request->input('city');
-     //   $data['location']=$request->input('location');
         $data['source_id']=$request->input('source');
        // $data['isDealer']=$request->input('isDealer');
         $data['description']=$request->input('description');
         $data['status']=1;
         $data['nextCallingDate']=$request->input('nextCallingDate');
-        $str="-".$request->input('products')."-";
-        $data['product_ids']=json_encode(explode("--",$str));
+        if($request->input('products'))
+        {
+            $str="-".$request->input('products')."-";
+            $products = explode("--",$str);
+            unset($products[count($products)-1]);
+            unset($products[0]);
+            $products=array_values($products);
+            $data['product_ids']=json_encode($products);
+        }
 
-        if($request->input('customerId'))$data['customer_id']=$request->input('customerId');
-        // $data['email_verified']=$request->input('email_verified');
-        // $data['mobile_verified']=$request->input('mobile_verified');
-        // $data['lastlogin']=Carbon::now()->toDateTimeString();
-        // $data['lastlogin_ip']=$request->getClientIp();
-        //dd($request->file('photo'));
-        // if($request->file('photo'))
-        // {
-        //     $request->validate([
-        //         'photo' => 'image|mimes:jpeg,png,jpg|max:2048',
-        //     ]);
-        
-        //     $imageName = 'customer'.time().'.'.$request->photo->extension();  
-        //     if($request->photo->move(public_path('customerphotos'), $imageName))
-        //     $data['photo']=$imageName;
-        // }
-        // if($request->input('password')&&$request->input('password_confirmation')&&$request->input('email'))
-        // {
-        //     $data['password']=$request->input('password');
-        // }
-        //dd($request->input());
-        if(Leads::insert($data))
+        $data['nextCallingDate']=$request->input('nextCallingDate');
+        $data['user_id'] = Auth::user()->id;
+
+        if($request->input('customerId'))
+        {
+            $data['customer_id']=$request->input('customerId');
+            Leads::insert($data);
+        }
+        else
+        {
+            $data_1['location']=$request->input('location');
+            $data_1['full_name']=$request->input('fullname');
+            $data_1['mobile']=$request->input('mobile');
+            $data_1['email']=$request->input('email');
+
+            $id=Customers::insertGetId($data_1);
+            $data['customer_id']=$id;
+            Leads::insert($data);
+        }
         return redirect(route('pos.crm.leads'));
     }
 
@@ -208,5 +207,18 @@ class LeadsController extends Controller
             $productsMatch.= '</li>';
         }
         return response()->json($productsMatch);
+    }
+    public function getUsersSearch(Request $request)
+    {
+            $users = User::where('name','like', '%'. $request->user .'%')
+                                    ->get();
+
+        $usersMatch='';
+        foreach($users as $user){
+            $usersMatch.= '<li class="list-group-item list-group-item-action" id="u**'.$user->id.'" onclick="selectUser('.$user->id.',\''.$user->userName.'\')">';
+            $usersMatch.= preg_replace("/".$request->user."/i",'<strong style="color:black;">'.$request->user.'</strong>', $user->name);
+            $usersMatch.= '</li>';
+        }
+        return response()->json($usersMatch);
     }
 }
