@@ -33,6 +33,7 @@ Route::prefix('pos/dashboard/crm')->group(function () {
         Route::get('/leads/getCustomersSearch', [LeadsController::class, 'getCustomersSearch'])->name('pos.crm.leads.getCustomersSearch');
         Route::get('/leads/getProductsSearch', [LeadsController::class, 'getProductsSearch'])->name('pos.crm.leads.getProductsSearch');
         Route::get('/leads/getUsersSearch', [LeadsController::class, 'getUsersSearch'])->name('pos.crm.leads.getUsersSearch');
+        Route::get('/leads/getHistory', [LeadsController::class, 'getHistory'])->name('pos.crm.leads.getHistory');
 
         //Lead History routes
         Route::get('/leads_history', [Leads_historyController::class, 'index'])->name('pos.crm.leads_history');

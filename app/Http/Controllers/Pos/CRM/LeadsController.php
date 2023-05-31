@@ -124,9 +124,9 @@ class LeadsController extends Controller
                 })
                 ->addColumn('action', function($row){
                     $actionBtn = 
-                    '<button id="viewHistory" data-toggle="modal" data-target="#leadHistoryModal" class="edit btn btn-info btn-sm">View History</button>
+                    '<button onclick="getHistory('.$row->id.')" data-toggle="modal" data-target="#leadHistoryModal" class="edit btn btn-info btn-sm">View History</button>
                     <button onclick="showData('.$row->id.')" data-toggle="modal" data-target="#addEditModel" class="edit btn btn-success btn-sm"><i class="fa-light fa-edit"></i></button> 
-                    <button onclick="delData('.$row->id.')" class="delete btn btn-danger btn-sm"><i class="fa-light fa-trash"></i></button>';
+                   ';
                     return $actionBtn;
                 })
                 ->rawColumns(['action'])
@@ -134,7 +134,31 @@ class LeadsController extends Controller
                 ->make(true);
         }
     }
-
+    public function getHistory(Request $request)
+    {
+            $histories = Leads_history::where('lead_id',$request->all())
+                                        ->leftjoin('users','users.id','=','leads_histories.user_id')
+                                        ->select('leads_histories.*','users.name as userName')
+                                        ->get();
+            $data='';
+            $i=1;
+            $status=['1'=>'Hot','2'=>'Mild','3'=>'Cold','4'=>'Sold','5'=>'Dead'];
+            $statusColor=['1'=>'red','2'=>'magenta','3'=>'#0aa','4'=>'green','5'=>'black'];
+            foreach($histories as $history)
+            {
+                $data.=
+                '<tr>
+                <td>'.$i++.'</td>
+                <td>'.$history->id.'</td>
+                <td>'.$history->comment.'</td>
+                <td>'.$history->userName.'</td>
+                <td>'.($history->commentType?'User':'Customer').'</td>
+                <td><span style="color:'.$statusColor[$history->status].'">'.$status[$history->status].'</span></td>
+                <td>'.$history->nextCallingDate.'</td>
+              </tr>';
+            }
+            return response()->json($data);
+    }
     /**
      * Show the form for editing the specified resource.
      */

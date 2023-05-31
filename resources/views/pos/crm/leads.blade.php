@@ -194,28 +194,64 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="modal-body" id="leadHistoryModal">
-                    <div class="modal-dialog modal-lg">
+
+
+
+                <div class="modal fade" id="leadHistoryModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
                         <div class="modal-content">
-                         <div class="table-responsive">
-                            <table id="leadHistoryDatatable" class="table table-bordered table-hover table-sm">
-                                <thead>
-                                  <tr>
-                                    <th>Sr.#</th>
-                                    <th>ID</th>
-                                    <th>Lead ID</th>
-                                    <th>Comment</th>
-                                    <th>Assigned User</th>
-                                    <th>Comment Type</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
+                            <div class="modal-header">
+                                <h5 class="modal-title">Lead History</h5>
+                                <button type="button" class="close" data-dismiss="modal" id="closeModal" aria-label="Close">
+                                <span aria-hidden="true"><i class="fa-light fa-close"></i></span>
+                                </button>
+                            </div>
+                            <div class="modal-body" id="demo">
+                               
+                          
+                        
+
+                                  <div class="step-content">
+                                    Lead ID: <b><span id="leadId"></span></b>
+                                    <!-- <div class="step-tab-panel" id="step1"> -->
                                     
-                                </tbody>
-                              </table>
-                         </div>
+                                                      <!-- <div class="table-responsive"> -->
+                                                        <table id="leadHistoryDatatable" class="table table-bordered table-hover table-sm">
+
+                                                          <thead>
+                                                            <tr>
+                                                              <th>Sr.#</th>
+                                                              <th>ID</th>
+                                                              <th>Comment</th>
+                                                              <th>Assigned User</th>
+                                                              <th>Comment Type</th>
+                                                              <th>Status</th>
+                                                              <th>Next Calling Date</th>
+                                                            </tr>
+                                                          </thead>
+                                                          <tbody id="tbodyHistory">
+                                                            
+                                                          </tbody>
+                                                          </table>
+
+                                                      <!-- </div> -->
+                                    
+ 
+                                    <!-- </div> -->
+                    
+
+                                 
+                                </div>
+                              
+                            </div>  
                         </div>
+                    </div>
                 </div>
+
+
+
+
+
             </div>
         </div>
     </div>
@@ -250,25 +286,19 @@
             });
         });
             
-        $("#viewHistory").on('click',function(){
-          var table = $('#datatable').DataTable({
-                paging: true,
-                retrieve: true,
-                processing: true,
-                serverSide: true,
-                responsive: true,
-                ajax: "{{ route('pos.crm.leads.table') }}",
-                columns: [
-                    {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                    {data: 'lead_id', name: 'lead_id'},
-                    {data: 'personal_info', name: 'personal_info'},
-                    {data: 'contact_info', name: 'contact_info'},
-                    {data: 'description', name: 'description'},
-                    {data: 'nextCallingDate', name: 'nextCallingDate'},
-                    {data: 'action', name: 'action', orderable: false, searchable: false},
-                ]
+        function getHistory(id){
+          $.ajax({
+                data: {'id':id},
+                url: "{{ route('pos.crm.leads.getHistory') }}",
+                type: 'GET',
+                dataType: 'JSON',
+                success: function(response) {
+                  console.log(response);
+                  $('#tbodyHistory').html(response);
+                }
             });
-        });
+            $('#leadId').html(id);
+        }
 
         $('#addBtn').on('click', function(e) {
             $.ajaxSetup({
