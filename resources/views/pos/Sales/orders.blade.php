@@ -21,7 +21,7 @@
                                 </button>
                             </div>
                             <div class="modal-body" id="demo">
-                                <form action={{route('pos.crm.leads.add')}} method='post' id="addEditForm" enctype="multipart/form-data">
+                                <form action={{route('pos.sales.orders.add')}} method='post' id="addEditForm" enctype="multipart/form-data">
                                   @csrf
                                 <div class="step-app">
                                   <ul class="step-steps">
@@ -273,7 +273,7 @@
                 processing: true,
                 serverSide: true,
                 responsive: true,
-                ajax: "{{ route('pos.crm.leads.table') }}",
+                ajax: "{{ route('pos.sales.orders.table') }}",
                 columns: [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                     {data: 'lead_id', name: 'lead_id'},
@@ -289,7 +289,7 @@
         function getHistory(id){
           $.ajax({
                 data: {'id':id},
-                url: "{{ route('pos.crm.leads.getHistory') }}",
+                url: "{{ route('pos.sales.orders.getHistory') }}",
                 type: 'GET',
                 dataType: 'JSON',
                 success: function(response) {
@@ -310,7 +310,7 @@
             $(".save-btn").html('<i class="fa-light fa-loader rotate"></i>');
             $.ajax({
                 data: $('#addEditForm').serialize(),
-                url: "{{ route('pos.crm.leads.add') }}",
+                url: "{{ route('pos.sales.orders.add') }}",
                 type: 'POST',
                 dataType: 'JSON',
                 success: function(data) {
@@ -332,7 +332,7 @@
         function showData(id) {
             $.ajax({
                 data: {'id':id},
-                url: "{{ route('pos.crm.leads.show') }}",
+                url: "{{ route('pos.sales.orders.show') }}",
                 type: 'GET',
                 dataType: 'JSON',
                 success: function(response) {
@@ -346,7 +346,7 @@
                     $('#email').val(response.customer.email);
                     $('#location').val(response.customer.location);  
 
-                    $("#addEditForm").attr('action', "{{ route('pos.crm.leads.update')}}"); 
+                    $("#addEditForm").attr('action', "{{ route('pos.sales.orders.update')}}"); 
                     $('#btnSubmit').html("Update");
                     $('#step2').prop('disabled',true);
                     $('#fullname').prop('disabled',true);
@@ -391,7 +391,7 @@
         } );
         $( "#btnNew" ).on( "click", function() {
           $('#btnSubmit').html("submit");
-          $("#addEditForm").attr('action', "{{ route('pos.crm.leads.add')}}");
+          $("#addEditForm").attr('action', "{{ route('pos.sales.orders.add')}}");
           $('input').val('');
           $('input').prop('disabled',false);
           $('textarea').prop('disabled',false);
@@ -408,7 +408,7 @@
             $.ajax({
 
               type:'GET',
-              url: "{{ route('pos.crm.leads.getCustomersSearch') }}",
+              url: "{{ route('pos.sales.orders.getCustomersSearch') }}",
               data: {'mobile':$('#mobile').val()},
               dataType:'JSON',
               success: function(response){
@@ -426,7 +426,7 @@
             $.ajax({
 
               type:'GET',
-              url: "{{ route('pos.crm.leads.getProductsSearch') }}",
+              url: "{{ route('pos.sales.orders.getProductsSearch') }}",
               data: {'product':$('#productTyping').val()},
               dataType:'JSON',
               success: function(response){
@@ -444,7 +444,7 @@
             $.ajax({
 
               type:'GET',
-              url: "{{ route('pos.crm.leads.getUsersSearch') }}",
+              url: "{{ route('pos.sales.orders.getUsersSearch') }}",
               data: {'user':$('#user').val()},
               dataType:'JSON',
               success: function(response){

@@ -231,6 +231,7 @@
         $( "#btnNew" ).on( "click", function() {
           $('#btnSubmit').html("submit");
           $("#addEditForm").attr('action', "{{ route('pos.crm.dealers.add')}}");
+          $('input').val('');
         } );
     </script>
 @endsection

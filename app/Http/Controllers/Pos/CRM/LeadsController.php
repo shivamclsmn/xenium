@@ -168,7 +168,7 @@ class LeadsController extends Controller
         $data['lead'] = Leads::where('leads.id', $id)->get()->first();
         //$data['lead']->product_ids=join(',',json_decode($data[0]->tags, true));
         $products=json_decode($data['lead']->product_ids, true);
-        if(count($products)>0)
+        if(!empty($products))
         {
             $str='';
             foreach($products as $product)

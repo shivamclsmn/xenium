@@ -346,6 +346,7 @@
         $( "#btnNew" ).on( "click", function() {
           $('#btnSubmit').html("submit");
           $("#addEditForm").attr('action', "{{ route('pos.hrms.employees.add')}}");
+          $('input').val('');
         } );
     </script>
 @endsection

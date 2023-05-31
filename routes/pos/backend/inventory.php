@@ -3,6 +3,7 @@
 use App\Http\Controllers\Pos\Inventory\CategoriesController;
 use App\Http\Controllers\Pos\Inventory\SpecificationsController;
 use App\Http\Controllers\Pos\Inventory\ProductsController;
+use App\Http\Controllers\Pos\Inventory\VendorsController;
 
 Route::prefix('pos/dashboard/inventory')->group(function () {
     Route::middleware('auth')->group(function () {
