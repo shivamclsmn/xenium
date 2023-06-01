@@ -1,18 +1,18 @@
-@extends('layouts.pos.dashboard', ['title' => 'Leads', 'module' => 'CRM'])
+@extends('layouts.pos.dashboard', ['title' => 'Orders', 'module' => 'Sales'])
 @section('content')
 <div class="row">
     <div class="col-12">
         <div class="card">
             <div class="card-body">
                 <div class="row">
-                    <h2 class="mb-4 col-md-6 text-md-left text-center">Leads</h2>
+                    <h2 class="mb-4 col-md-6 text-md-left text-center">Orders</h2>
                     <div class="mb-4 col-md-6 text-right">
-                        <button class="btn btn-primary btn-sm" id="btnNew" data-toggle="modal" data-target="#addEditModel">New Lead</button>
+                        <button class="btn btn-primary btn-sm" id="btnNew" data-toggle="modal" data-target="#addEditModel">New Order</button>
                     </div>
                 </div>
                 <!-- Modal -->
                 <div class="modal fade" id="addEditModel" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
+                    <div class="modal-dialog modal-xl">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title">Add / Edit</h5>
@@ -25,8 +25,8 @@
                                   @csrf
                                 <div class="step-app">
                                   <ul class="step-steps">
-                                    <li><a href="#step1"><span class="number">1</span> Lead Info</a></li>
-                                    <li><a href="#step2"><span class="number">2</span> Lead Action</a></li>
+                                    <li><a href="#step1"><span class="number">1</span> Order Info</a></li>
+                                    <li><a href="#step2"><span class="number">2</span> Address Info</a></li>
                                   </ul>
                                   <div class="step-content">
                                     <div class="step-tab-panel" id="step1">
@@ -36,7 +36,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                               <label for="lastName1">Phone Number:</label>
-                                              <input type="hidden" name="customerId" id="customerId" >
+                                              <input type="hidden" name="customerId" id="customerId" required>
                                               <input class="form-control" type="text" placeholder="Mobile" name="mobile" id="mobile" pattern="[0-9]{10}" required>
                                               <ul class="list-group" id='customers'></ul>
                                             </div>
@@ -58,17 +58,70 @@
                                           </div>
                                           <div class="col-md-6">
                                             <div class="form-group">
-                                              <label for="location">Location:</label>
-                                              <input class="form-control" type="text" id="location" name="location" required>
+                                              <label for="shipping">Shipping:</label><br>
+                                              <input  type="checkbox"  id="shipping" name="shipping" value=1>
                                             </div>
                                           </div>
                                         </div>
                                         <div class="row">
                                           <div class="col-md-12">
                                             <div class="form-group">
-                                              <label for="description">Select Products:</label>
+                                              <label for="description">Add Items:</label>
                                               <input type='hidden' name="products" id="products" value=''>
-                                              <div  id="productArea">
+                                              <div  >
+                                                    <input type='hidden' name="entriesCount" id="entriesCount" value="1" >
+
+
+                                                    <input type='hidden' name="totalAmount" id="totalAmount"  >
+                                                    <table class="table table-bordered table-hover table-sm">
+
+                                                        <thead>
+                                                          <tr>
+                                                          
+                                                            <th>Item</th>
+                                                            <th>Price/Unit</th>
+                                                            <th>Quantity</th>
+                                                            <th>Total Price</th>
+                                                            <td></td>
+                                                          </tr>
+                                                        </thead>
+                                                        <tbody id="productArea">
+                                                        </tbody>
+                                                        <tfoot id="tFoot">
+                                                            <tr>
+                                                          
+                                                              <td></td>
+                                                              <td></td>
+                                                              <td>Discount%</td>
+                                                              <td id="discountPercentShow" class='price'>
+                                                              <input type='text' class="w-25 form-control" name="discountPercent" id="discountPercent" onkeyup="updateTotalPrice()" pattern="[0-9]">
+                                                              </td>
+                                                            </tr>
+                                                            <tr>
+                                                        
+                                                              <td></td>
+                                                              <td></td>
+                                                              <td>Discount Amount</td>
+                                                              <td id="discountAmountShow" class='price'>
+                                                              <input type='text' class="w-25 form-control" name="discountAmount" id="discountAmount"  onkeyup="updateTotalPrice()" pattern="[0-9]">
+                                                              </td>
+                                                            </tr>
+                                                            <tr>
+                                                           
+                                                              <td></td>
+                                                              <td></td>
+                                                              <td>Shipping price</td>
+                                                              <td id="shippingPrice" class='price'>0</td>
+                                                            </tr>
+`                                                           <tr>
+                                                          
+                                                              <td></td>
+                                                              <td></td>
+                                                              <td>Total Amount</td>
+                                                              <td><strong id="totalPrice">0</strong></td>
+                                                            </tr>
+                                                        </tfoot>
+                                                        </table>
                                               </div><br>
                                              <input class="form-control" type='text' name="productTyping" id="productTyping" value='' placeholder="Type product name to search">                                                 
                                               <ul class="list-group" id='productList'></ul>
@@ -78,7 +131,7 @@
                                         <div class="row">
                                           <div class="col-md-12">
                                             <div class="form-group">
-                                              <label for="description">Query/Lead description:</label>
+                                              <label for="description">Remark:</label>
                                               <textarea class="form-control" type="text" id="description" name="description" ></textarea>
                                             </div>
                                           </div>
@@ -109,58 +162,32 @@
                                     </div>
                                     <div class="step-tab-panel" id="step2">
                                       <div class="row">
-                                      <div class="col-md-3">
+                                      <div class="col-md-12">
                                           <div class="form-group">
-                                          <label>Type of Comment</label><br>
-                                          <input type="radio" id="customerType" name="commentType" value=0 >
-                                          <label for="customerType">Customer</label><br>
-                                          <input type="radio" id="userType" name="commentType" value=1 >
-                                          <label for="userType">User</label><br>                                                                    
+                                            <label for="address">Address</label>
+                                            <input class="form-control" id="address" type="text" id="address" name="address" placeholder="Street Address">
                                           </div>
                                         </div>
-                                          <div class="col-md-9">
-                                            <div class="form-group">
-                                              <label for="comment">Comment:</label>
-                                              <textarea class="form-control" type="text" id="comment" name="comment" ></textarea>
-                                            </div>
+
+                                        <div class="col-md-6">
+                                          <div class="form-group">
+                                            <label for="city">City / State</label>
+                                            <input class="form-control" id="city" type="text" name="city" placeholder="City">
                                           </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                          <div class="form-group">
+                                            <label for="pincode">Pincode</label>
+                                            <input class="form-control" id="videoUrl1" type="text" id="pincode" name="pincode" placeholder="Pincode">
+                                          </div>
+                                        </div>
                                         </div>
                                       <div class="row m-t-2">
 
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                              <label for="nextCallingDate">Status:</label>
-                                              <select class="form-control"  id="status" name="status" >
-                                                <option value=1 >Hot</option>
-                                                <option value=2 >Mild</option>
-                                                <option value=3 >Cold</option>
-                                                <option value=4 >Sold</option>
-                                                <option value=5 >Dead</option>
-                                                <select>
-                                            </div>
-                                          </div>
 
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                              <label for="userAssigned">Assign Lead to:</label>
-                                                <input type="hidden" class="form-control"  id="userAssigned" name="userAssigned" >
 
-                                                <input class="form-control" type="text" placeholder="Type user name to search" name="user" id="user">
-                                                <ul class="list-group" id='users'></ul>
 
-                                            </div>
-                                          </div>
-
-                                          <div class="col-md-3">
-                                            <div class="form-group">
-                                              <label for="nextCallingDate">Next Calling Date:</label>
-                                              @php 
-                                              $date = strtotime("+1 day", strtotime("now"));
-                                              $date= date("Y-m-d", $date);
-                                              @endphp
-                                              <input type="date" class="form-control"  id="nextCallingDateHistory" name="nextCallingDate" value="{{$date}}" disabled>
-                                            </div>
-                                          </div>
                                       </div>
                                     </div>
                                   </div>
@@ -275,7 +302,7 @@
                 responsive: true,
                 ajax: "{{ route('pos.sales.orders.table') }}",
                 columns: [
-                    {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                    {data: 'DT_rowNum', name: 'DT_rowNum'},
                     {data: 'lead_id', name: 'lead_id'},
                     {data: 'personal_info', name: 'personal_info'},
                     {data: 'contact_info', name: 'contact_info'},
@@ -286,19 +313,6 @@
             });
         });
             
-        function getHistory(id){
-          $.ajax({
-                data: {'id':id},
-                url: "{{ route('pos.sales.orders.getHistory') }}",
-                type: 'GET',
-                dataType: 'JSON',
-                success: function(response) {
-                  console.log(response);
-                  $('#tbodyHistory').html(response);
-                }
-            });
-            $('#leadId').html(id);
-        }
 
         $('#addBtn').on('click', function(e) {
             $.ajaxSetup({
@@ -393,14 +407,19 @@
           $('#btnSubmit').html("submit");
           $("#addEditForm").attr('action', "{{ route('pos.sales.orders.add')}}");
           $('input').val('');
+
+          $('#entriesCount').val(0);
+          $('#discountPercent').val(0);
+          $('#discountAmount').val(0);
+
           $('input').prop('disabled',false);
           $('textarea').prop('disabled',false);
           $('select').prop('disabled',false);
           $('#nextCallingDateHistory').prop('disabled',true);
           $('textarea').val('');
           $('#productArea').html('');
+          //$("#tFoot").hide();
         } );
-
 
           $("#mobile").keyup(function(){
             if($('#mobile').val().length==0)$('#customers').html('');
@@ -408,7 +427,7 @@
             $.ajax({
 
               type:'GET',
-              url: "{{ route('pos.sales.orders.getCustomersSearch') }}",
+              url: "{{ route('pos.crm.leads.getCustomersSearch') }}",
               data: {'mobile':$('#mobile').val()},
               dataType:'JSON',
               success: function(response){
@@ -438,24 +457,6 @@
             }); 
         });
 
-        $("#user").keyup(function(){
-            if($('#user').val().length==0)$('#users').html('');
-            else
-            $.ajax({
-
-              type:'GET',
-              url: "{{ route('pos.sales.orders.getUsersSearch') }}",
-              data: {'user':$('#user').val()},
-              dataType:'JSON',
-              success: function(response){
-
-                console.log(response);
-
-                $("#users").html(response);
-              }
-            }); 
-        });
-
         function getCustomerDetails(id){
           $.ajax({
                 data: {'id':id},
@@ -468,7 +469,7 @@
                     $('#fullname').val(response.full_name);
                     $('#mobile').val(response.mobile);
                     $('#email').val(response.email);
-                    $('#location').val(response.location);
+                    $('#address').val(response.address);
 
                     $("#fullname").attr('disabled',true); 
                     $("#email").attr('disabled',true); 
@@ -480,26 +481,90 @@
               });
         }
 
-        function addProduct(id,productName){
+        function addProduct(itemId,itemName,itemPrice){
+         let itemNotExist=true;
+          $('.itemQuantity').each(function () {
+              if('item-'+itemId==this.name){
+              itemNotExist=false;
+              }
+          });
+
+         if(itemNotExist){
+          let rowNum=parseInt($("#entriesCount").val())+1;
+
+           $("#products").val($("#products").val()+'-'+id.toString()+'-');
+            let str='<tr class="item" id="row'+rowNum+'">';
+            str+='<td>'+itemName+'</td>';
+            str+='<td id="price'+itemId+'">'+itemPrice+'</td>';
+            str+='<td><input type="text" class="w-25 form-control itemQuantity" name="item-'+itemId+'" value="1" id="Quantity'+itemId+'" onkeyup="updateTotalPrice()" required></td>';
+            str+='<td>'+itemPrice+'</td>';
+            str+='<td onclick="removeProduct('+rowNum+')"><i class="fa-light fa-trash"></i></td>';
+            str+='</tr>';
+
+           $("#productArea").append(str);
+           $('#entriesCount').val(rowNum);  
+
+           updateTotalPrice();
+         }
+           // $("#tFoot").show();
+       }
+       function removeProduct(num){
+         document.getElementById('row'+num).remove();
          
-          if(!$("#products").val().includes('-'+id+'-'))
-          {
-            $("#products").val($("#products").val()+'-'+id.toString()+'-');
-          $("#productArea").append(' <span class="border bg-light px-1 py-1 w-25" id="pShow*'+id+'">'+productName+'&nbsp&nbsp <i class="fa fa-close" onclick="removeProduct('+id+')"></i><span>&nbsp');  
+         $('#entriesCount').val(parseInt($('#entriesCount').val())-1); 
+
+         updateTotalPrice()
+       }
+       $("#shipping").change(function() {
+          if(this.checked) {
+            $('#shippingPrice').html(400);
           }
-          
-        }
-        function removeProduct(id){
-          document.getElementById('pShow*'+id).remove();
-          let str=$("#products").val();
-          str=str.replace("-"+id+"-", "");
-          $("#products").val(str);
-        }
-        function selectUser(id){
-          $("#userAssigned").val(id);
-        }
-        $("#nextCallingDate").on('change',function(){
-          $("#nextCallingDateHistory").val($("#nextCallingDate").val());
+          else{
+            $('#shippingPrice').html(0);
+          }
+          updateTotalPrice()
         });
+
+      function updateTotalPrice(){
+        let sum=0.0;
+
+        $('.itemQuantity').each(function () {
+
+          
+        //  for(let i=1; i<= $('.item').length; i++)
+        {
+          let price=0.0;
+          let quantity=0.0;
+          if ($('#price'+this.name.substring(5)).html()!== ""){
+              price=parseFloat($('#price'+this.name.substring(5)).html());
+            }
+          if (this.value!== ""){
+            quantity=parseFloat(this.value);
+          }
+          sum +=price*quantity;
+        }
+
+
+          });
+
+
+
+        let discPercent=0.0;
+        let discAmount=0.0;
+        if ($('#discountPercent').val()!== "")
+        {
+          discPercent=(parseFloat($('#discountPercent').val()) * sum)/100;
+        }
+        if ($('#discountAmount').val()!== "")
+        {
+          discAmount=parseFloat($('#discountAmount').val());
+        }
+       
+        sum=sum-discPercent-discAmount;
+
+        sum +=parseFloat($('#shippingPrice').html());
+          $('#totalPrice').html(sum);
+      }
+
     </script>
 @endsection

@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Pos\Sales;
 
 use App\Http\Controllers\Controller;
-use App\Models\CRM\Customers;
+use App\Models\Sales\Orders;
 use App\Models\User;
+use App\Models\Inventory\Products;
 use Illuminate\Http\Request;
 use DataTables;
 use Illuminate\Http\JsonResponse;
@@ -18,7 +19,7 @@ class OrdersController extends Controller
     public function index()
     {
         //
-        $data = Orders::where('isDealer','0')->get();
+        $data = Orders::get();
         return view('pos.sales.orders', compact('data'));
     }
 
@@ -77,7 +78,7 @@ class OrdersController extends Controller
         //
         if ($request->ajax()) {
 
-            $data = Orders::where('isDealer',0)->latest()->get();
+            $data = Orders::latest()->get();
 
             return Datatables::of($data)
                 ->addIndexColumn()
@@ -117,8 +118,6 @@ class OrdersController extends Controller
      */
     public function update(Request $request, Customers $customers)
     {
-        //
-
         $data['full_name']=$request->input('fullname');
         $data['mobile']=$request->input('mobile');
         $data['email']=$request->input('email');
@@ -156,5 +155,19 @@ class OrdersController extends Controller
     {
         $data = Orders::where('id', $request->id)->delete();
         return response()->json($data);
+    }
+    public function getProductsSearch(Request $request)
+    {
+            $products = Products::where('productName','like', '%'. $request->product .'%')
+                                    ->orWhere('sku','like', '%'. $request->product .'%')->get();
+
+        $productsMatch='';
+        foreach($products as $product){
+            $productsMatch.= '<li class="list-group-item list-group-item-action itemRow" id="p**'.$product->id.'" onclick="addProduct('.$product->id.',\''.$product->productName.'\','.$product->price.')">';
+            $productsMatch.= preg_replace("/".$request->product."/i", '<strong style="color:black;">'.$request->product.'</strong>', $product->sku);
+            $productsMatch.= ' - '.preg_replace("/".$request->product."/i",'<strong style="color:black;">'.$request->product.'</strong>', $product->productName);
+            $productsMatch.= '</li>';
+        }
+        return response()->json($productsMatch);
     }
 }

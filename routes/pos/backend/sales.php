@@ -11,6 +11,8 @@ Route::prefix('pos/dashboard/sales')->group(function () {
         Route::get('/orders/show', [OrdersController::class, 'edit'])->name('pos.sales.orders.show');
         Route::post('/orders/delete', [OrdersController::class, 'destroy'])->name('pos.sales.orders.delete');
         Route::post('/orders/update', [OrdersController::class, 'update'])->name('pos.sales.orders.update');
+        Route::get('/orders/getProductsSearch', [OrdersController::class, 'getProductsSearch'])->name('pos.sales.orders.getProductsSearch');
+        Route::post('/orders/update', [OrdersController::class, 'update'])->name('pos.sales.orders.update');
 
     });
 });

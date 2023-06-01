@@ -14,11 +14,14 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->dateTime('dateCreated');
-            $table->tinyInteger('status');
+            $table->tinyInteger('paymentStatus')->comment('partial,complete,failed');
+            $table->tinyInteger('orderStatus')->comment('accept,dispatch,shipping,delivered,completed');
+            $table->tinyInteger('status')->comment('for generic use in future');
             $table->float('totalAmount');
             $table->boolean('shipping');
             $table->float('discountPercent')->nullable();
             $table->float('discountAmount')->nullable();
+            $table->json('partialPayDetails')->nullable();
             $table->unsignedBigInteger('customerId');
             $table->unsignedBigInteger('userId');
             $table->string('remark');
