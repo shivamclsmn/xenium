@@ -411,7 +411,7 @@
           {
             $("#products").val($("#products").val()+'-'+id.toString()+'-');
 
-            var str=' <tr><td>'.productName.'</td><td><input class="form-control " type="text" name="price-'+id+'" id="price-'+id+'" placeholder="Fill Price"></td>';
+            var str=' <tr><td>'+productName+'</td><td><input class="form-control " type="text" name="price-'+id+'" id="price-'+id+'" placeholder="Fill Price"></td>';
             str+='<td> <input class="form-control  " type="text" name="quantity-'+id+'" id="quantity-'+id+'" placeholder="Fill Qunatity"> </td><td><i class="fa fa-trash" onclick="removeProduct('+id+')"></i></td></tr>';
    
           $("#productArea").append(str);  
