@@ -4,6 +4,7 @@ use App\Http\Controllers\Pos\Inventory\CategoriesController;
 use App\Http\Controllers\Pos\Inventory\SpecificationsController;
 use App\Http\Controllers\Pos\Inventory\ProductsController;
 use App\Http\Controllers\Pos\Inventory\VendorsController;
+use App\Http\Controllers\Pos\Inventory\StocksController;
 
 Route::prefix('pos/dashboard/inventory')->group(function () {
     Route::middleware('auth')->group(function () {
@@ -42,5 +43,14 @@ Route::prefix('pos/dashboard/inventory')->group(function () {
         Route::get('/vendors/show', [VendorsController::class, 'edit'])->name('pos.inventory.vendors.show');
         Route::post('/vendors/delete', [VendorsController::class, 'destroy'])->name('pos.inventory.vendors.delete');
         Route::post('/vendors/update', [VendorsController::class, 'update'])->name('pos.inventory.vendors.update');
+         //stocks
+         Route::get('/stocks', [StocksController::class, 'index'])->name('pos.inventory.stocks');
+         Route::get('/stocks/dt', [StocksController::class, 'show'])->name('pos.inventory.stocks.table');
+         Route::post('/stocks/add', [StocksController::class, 'store'])->name('pos.inventory.stocks.add');
+         Route::get('/stocks/show', [StocksController::class, 'edit'])->name('pos.inventory.stocks.show');
+         Route::post('/stocks/delete', [StocksController::class, 'destroy'])->name('pos.inventory.stocks.delete');
+         Route::post('/stocks/update', [StocksController::class, 'update'])->name('pos.inventory.stocks.update');
+         Route::get('/stocks/getVendorsSearch', [StocksController::class, 'getVendorsSearch'])->name('pos.inventory.stocks.getVendorsSearch');
+        //  Route::get('/stocks/getProductsSearch', [StocksController::class, 'getProductsSearch'])->name('pos.inventory.stocks.getProductsSearch');
     });
 });

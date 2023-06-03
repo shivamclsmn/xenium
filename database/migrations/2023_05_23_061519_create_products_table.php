@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('categoryId');
             $table->string('productName');
             $table->Integer('price');
-            $table->Integer('quantity');
+            $table->Integer('dollarPrice')->comment('dollar price is static as per company policy');
             $table->string('status');
             $table->boolean('isFeatured')->default(0);
             $table->json('specifications')->nullable();

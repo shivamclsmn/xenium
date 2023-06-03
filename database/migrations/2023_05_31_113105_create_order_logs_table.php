@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('orderId');
             $table->string('actionType')->comment('possible values: Create, Edit etc');
-            $table->float('amount')->comment('available amount to be paid at the time of action ');
+            $table->float('amountToPay')->comment('available amount to be paid at the time of action ');
+            $table->float('paidAmount')->comment('only current paid(not total paid) amount');
             $table->json('itemIds');
             $table->dateTime('time');
             $table->float('discountPercent')->nullable();

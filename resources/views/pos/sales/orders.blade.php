@@ -21,58 +21,71 @@
                                 </button>
                             </div>
                             <div class="modal-body" id="demo">
+
+
                                 <form action={{route('pos.sales.orders.add')}} method='post' id="addEditForm" enctype="multipart/form-data">
                                   @csrf
-                                <div class="step-app">
+
+
+                                <div class="step-app" >
                                   <ul class="step-steps">
                                     <li><a href="#step1"><span class="number">1</span> Order Info</a></li>
                                     <li><a href="#step2"><span class="number">2</span> Address Info</a></li>
                                   </ul>
-                                  <div class="step-content">
+                                  <div class="step-content" >
                                     <div class="step-tab-panel" id="step1">
-                                    <input class="form-control" id="id" name="id" type="text" hidden>
+                                      <input class="form-control" id="id" name="id" type="text" hidden>
 
                                         <div class="row m-t-2">
-                                        <div class="col-md-6">
+                                        <div class="col-md-3">
                                             <div class="form-group">
                                               <label for="lastName1">Phone Number:</label>
-                                              <input type="hidden" name="customerId" id="customerId" required>
-                                              <input class="form-control" type="text" placeholder="Mobile" name="mobile" id="mobile" pattern="[0-9]{10}" required>
+                                              <input type="hidden" name="customerId" id="customerId"  required>
+                                              <input class="form-control refreshable" type="text" placeholder="Mobile" name="mobile" id="mobile" pattern="[0-9]{10}" required>
                                               <ul class="list-group" id='customers'></ul>
                                             </div>
                                           </div>
-                                          <div class="col-md-6">
+                                          <div class="col-md-3">
                                             <div class="form-group">
                                               <label for="firstName1">Email Address:</label>
-                                              <input class="form-control" type="text" placeholder="Email" name="email" id="email">
+                                              <input class="form-control refreshable" type="text" placeholder="Email" name="email" id="email">
                                             </div>
                                           </div>
-
-                                        </div>
-                                        <div class="row">
                                           <div class="col-md-6">
                                             <div class="form-group">
                                               <label for="firstName1">Full Name:</label>
-                                              <input class="form-control" type="text" id="fullname" placeholder="Full Name" name="fullname" required>
-                                            </div>
-                                          </div>
-                                          <div class="col-md-6">
-                                            <div class="form-group">
-                                              <label for="shipping">Shipping:</label><br>
-                                              <input  type="checkbox"  id="shipping" name="shipping" value=1>
+                                              <input class="form-control refreshable" type="text" id="fullname" placeholder="Full Name" name="fullname" required>
                                             </div>
                                           </div>
                                         </div>
                                         <div class="row">
-                                          <div class="col-md-12">
+                                          <div class="col-md-6">
                                             <div class="form-group">
-                                              <label for="description">Add Items:</label>
-                                              <input type='hidden' name="products" id="products" value=''>
-                                              <div  >
-                                                    <input type='hidden' name="entriesCount" id="entriesCount" value="1" >
+                                                      <label for="description">Add Items:</label>
+                                                      <input type='hidden' name="products" id="products" value=''>
+                                                
+                                                      <input type='hidden' name="entriesCount" id="entriesCount" value="1" >
 
 
-                                                    <input type='hidden' name="totalAmount" id="totalAmount"  >
+                                                      <input type='hidden' name="totalAmount" id="totalAmount"  >
+
+                                                      <input class="form-control refreshable" type='text' name="productTyping" id="productTyping" value='' placeholder="Type product name to search">                                                 
+                                                      <ul class="list-group" id='productList'></ul>
+
+                                             </div>
+                                          </div>
+
+
+                                                    <div class="col-md-6">
+                                                      <div class="form-group">
+                                                        <label for="remark">Remark:</label>
+                                                        <input class="form-control refreshable"  type="text" id="remark" name="remark" >
+                                                      </div>
+                                                    </div>
+                                          
+                                        </div>
+                                        <div class="row">
+                                          <div class="col-md-12">
                                                     <table class="table table-bordered table-hover table-sm">
 
                                                         <thead>
@@ -94,7 +107,7 @@
                                                               <td></td>
                                                               <td>Discount%</td>
                                                               <td id="discountPercentShow" class='price'>
-                                                              <input type='text' class="w-25 form-control" name="discountPercent" id="discountPercent" onkeyup="updateTotalPrice()" pattern="[0-9]">
+                                                              <input type='text' class="w-25 form-control refreshable" name="discountPercent" id="discountPercent" onkeyup="updateTotalPrice()" pattern="[0-9]">
                                                               </td>
                                                             </tr>
                                                             <tr>
@@ -103,14 +116,17 @@
                                                               <td></td>
                                                               <td>Discount Amount</td>
                                                               <td id="discountAmountShow" class='price'>
-                                                              <input type='text' class="w-25 form-control" name="discountAmount" id="discountAmount"  onkeyup="updateTotalPrice()" pattern="[0-9]">
+                                                              <input type='text' class="w-25 form-control refreshable" name="discountAmount" id="discountAmount"  onkeyup="updateTotalPrice()" pattern="[0-9]">
                                                               </td>
                                                             </tr>
                                                             <tr>
                                                            
                                                               <td></td>
                                                               <td></td>
-                                                              <td>Shipping price</td>
+                                                              <td>
+                                                              <label for="shipping">Shipping price:</label>
+                                                              <input  type="checkbox"  id="shipping" name="shipping" value=1>
+                                                              </td>
                                                               <td id="shippingPrice" class='price'>0</td>
                                                             </tr>
 `                                                           <tr>
@@ -122,64 +138,58 @@
                                                             </tr>
                                                         </tfoot>
                                                         </table>
-                                              </div><br>
-                                             <input class="form-control" type='text' name="productTyping" id="productTyping" value='' placeholder="Type product name to search">                                                 
-                                              <ul class="list-group" id='productList'></ul>
-                                            </div>
                                           </div>
+                                            
                                         </div>
-                                        <div class="row">
-                                          <div class="col-md-12">
-                                            <div class="form-group">
-                                              <label for="description">Remark:</label>
-                                              <textarea class="form-control" type="text" id="description" name="description" ></textarea>
-                                            </div>
-                                          </div>
-                                        </div>
+
+
                                         <div class="row">
                                           <div class="col-md-3">
                                             <div class="form-group">
-                                              <label for="nextCallingDate">Next Calling Date:</label>
-                                              @php 
-                                              $date = strtotime("+1 day", strtotime("now"));
-                                              $date= date("Y-m-d", $date);
-                                              @endphp
-                                              <input type="date" class="form-control"  id="nextCallingDate" name="nextCallingDate" value="{{$date}}">
-                                            </div>
-                                          </div>
-                                          <div class="col-md-3">
-                                            <div class="form-group">
-                                              <label for="nextCallingDate">Lead Source:</label>
-                                              <select class="form-control"  id="source" name="source" >
-                                                <option value=1 >Reference</option>
-                                                <option value=2 >Website</option>
-                                                <option value=2 >Facebook</option>
-                                                <option value=3 >Youtube</option>
+                                              <label for="paymentMode">Payment Mode:</label>
+                                              <select class="form-control"  id="paymentMode" name="paymentMode" >
+                                                <option value='Online' >Online</option>
+                                                <option value='Cash' >Cash</option>
+                                                <option value='Cheque' >Cheque</option>
                                                 <select>
                                             </div>
                                           </div>
+                                          <div class="col-md-3">
+                                            <div class="form-group">
+                                              <label for="paymentPartial">Partial Payment:</label>
+                                              <input  type="checkbox"  id="paymentPartial" name="paymentPartial" value=1><br>
+                                              <input class="form-control refreshable" id="partialAmount" type="text" name="partialAmount" placeholder="Partial amount" >
+                                            </div>
+                                          </div>
+                                          <div class="col-md-3">
+                                            <div class="form-group">
+                                              <label for="nextPayDate">Next Pay Date:</label>
+                                              <input  type="date" class="form-control" id="nextPayDate" name="nextPayDate" ><br>
+                                            </div>
+                                          </div>
                                         </div>
+
                                     </div>
                                     <div class="step-tab-panel" id="step2">
                                       <div class="row">
                                       <div class="col-md-12">
                                           <div class="form-group">
                                             <label for="address">Address</label>
-                                            <input class="form-control" id="address" type="text" id="address" name="address" placeholder="Street Address">
+                                            <input class="form-control refreshable" id="address" type="text" name="address" placeholder="Street Address">
                                           </div>
                                         </div>
 
                                         <div class="col-md-6">
                                           <div class="form-group">
                                             <label for="city">City / State</label>
-                                            <input class="form-control" id="city" type="text" name="city" placeholder="City">
+                                            <input class="form-control refreshable" id="city" type="text" name="city" placeholder="City">
                                           </div>
                                         </div>
 
                                         <div class="col-md-6">
                                           <div class="form-group">
                                             <label for="pincode">Pincode</label>
-                                            <input class="form-control" id="videoUrl1" type="text" id="pincode" name="pincode" placeholder="Pincode">
+                                            <input class="form-control refreshable" type="text" id="pincode" name="pincode" placeholder="Pincode">
                                           </div>
                                         </div>
                                         </div>
@@ -197,7 +207,7 @@
                                     <button type='submit' id='btnSubmit' data-direction="finish" class="btn btn-primary">Submit</button>
                                   </div>
                                 </div>
-                                <form>
+                              </form>
                             </div>  
                         </div>
                     </div>
@@ -208,11 +218,12 @@
                         <thead>
                           <tr>
                             <th>Sr.#</th>
-                            <th>Lead ID</th>
+                            <th>Order ID</th>
                             <th>Personal Info</th>
                             <th>Contact Info</th>
-                            <th>Description</th>
-                            <th>Next Calling Date</th>
+                            <th>Total Amount</th>
+                            <th>Due Amount</th>
+                            <th>Status</th>
                             <th>Actions</th>
                           </tr>
                         </thead>
@@ -303,11 +314,12 @@
                 ajax: "{{ route('pos.sales.orders.table') }}",
                 columns: [
                     {data: 'DT_rowNum', name: 'DT_rowNum'},
-                    {data: 'lead_id', name: 'lead_id'},
+                    {data: 'id', name: 'id'},
                     {data: 'personal_info', name: 'personal_info'},
                     {data: 'contact_info', name: 'contact_info'},
-                    {data: 'description', name: 'description'},
-                    {data: 'nextCallingDate', name: 'nextCallingDate'},
+                    {data: 'totalAmount', name: 'totalAmount'},
+                    {data: 'dueAmount', name: 'dueAmount'},
+                    {data: 'orderStatus', name: 'orderStatus'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ]
             });
@@ -406,13 +418,17 @@
         $( "#btnNew" ).on( "click", function() {
           $('#btnSubmit').html("submit");
           $("#addEditForm").attr('action', "{{ route('pos.sales.orders.add')}}");
-          $('input').val('');
+          //$('.refreshable').val('');
 
           $('#entriesCount').val(0);
           $('#discountPercent').val(0);
           $('#discountAmount').val(0);
 
           $('input').prop('disabled',false);
+          $('#partialAmount').prop('disabled',true);
+          $('#nextPayDate').prop('disabled',true);
+
+
           $('textarea').prop('disabled',false);
           $('select').prop('disabled',false);
           $('#nextCallingDateHistory').prop('disabled',true);
@@ -421,6 +437,8 @@
           //$("#tFoot").hide();
         } );
 
+
+        
           $("#mobile").keyup(function(){
             if($('#mobile').val().length==0)$('#customers').html('');
             else
@@ -470,6 +488,8 @@
                     $('#mobile').val(response.mobile);
                     $('#email').val(response.email);
                     $('#address').val(response.address);
+                    $('#city').val(response.city);
+                    $('#pincode').val(response.pincode);
 
                     $("#fullname").attr('disabled',true); 
                     $("#email").attr('disabled',true); 
@@ -507,6 +527,8 @@
            updateTotalPrice();
          }
            // $("#tFoot").show();
+           $(".list-group").html('');
+        $("#productTyping").val('');
        }
        function removeProduct(num){
          document.getElementById('row'+num).remove();
@@ -524,15 +546,27 @@
           }
           updateTotalPrice()
         });
-
+        
+        $("#paymentPartial").change(function() {
+          if(this.checked) {
+            $('#partialAmount').prop('disabled',false);
+          $('#nextPayDate').prop('disabled',false);
+          $('#partialAmount').prop('required',false);
+          $('#nextPayDate').prop('required',false);
+          }
+          else{
+            $('#partialAmount').prop('disabled',true);
+          $('#nextPayDate').prop('disabled',true);
+          $('#partialAmount').prop('required',true);
+          $('#nextPayDate').prop('required',true);
+          }
+          updateTotalPrice()
+        });
       function updateTotalPrice(){
         let sum=0.0;
 
         $('.itemQuantity').each(function () {
 
-          
-        //  for(let i=1; i<= $('.item').length; i++)
-        {
           let price=0.0;
           let quantity=0.0;
           if ($('#price'+this.name.substring(5)).html()!== ""){
@@ -542,8 +576,6 @@
             quantity=parseFloat(this.value);
           }
           sum +=price*quantity;
-        }
-
 
           });
 
@@ -564,7 +596,7 @@
 
         sum +=parseFloat($('#shippingPrice').html());
           $('#totalPrice').html(sum);
-      }
-
+          $('#totalAmount').val(sum);
+      }  
     </script>
 @endsection

@@ -4,12 +4,18 @@ namespace App\Http\Controllers\Pos\Sales;
 
 use App\Http\Controllers\Controller;
 use App\Models\Sales\Orders;
+use App\Models\Sales\OrderLogs;
 use App\Models\User;
 use App\Models\Inventory\Products;
+use App\Models\Sales\OrdersItems;
+use App\Models\CRM\Customers;
 use Illuminate\Http\Request;
 use DataTables;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+use PDF;
 
 class OrdersController extends Controller
 {
@@ -20,7 +26,8 @@ class OrdersController extends Controller
     {
         //
         $data = Orders::get();
-        return view('pos.sales.orders', compact('data'));
+        $tokenTag=  '<input type="hidden" name="_token" value="'.csrf_token().'">';
+        return view('pos.sales.orders', compact('data','tokenTag'));
     }
 
     /**
@@ -37,36 +44,75 @@ class OrdersController extends Controller
      */
     public function store(Request $request)
     {
-        $data['full_name']=$request->input('fullname');
-        $data['mobile']=$request->input('mobile');
-        $data['email']=$request->input('email');
-        $data['address']=$request->input('address');
-        $data['pincode']=$request->input('pincode');
-        $data['city']=$request->input('city');
-        $data['location']=$request->input('location');
-        $data['source']=$request->input('source');
-        $data['isDealer']=$request->input('isDealer');
-        // $data['email_verified']=$request->input('email_verified');
-        // $data['mobile_verified']=$request->input('mobile_verified');
-        // $data['lastlogin']=Carbon::now()->toDateTimeString();
-        // $data['lastlogin_ip']=$request->getClientIp();
-        //dd($request->file('photo'));
-        if($request->file('photo'))
+        $invoiceLatest=Orders::orderBy('id','desc')->first();
+        if(isset($invoiceLatest->invoiceId))
+        {   
+            $num='0001';
+            if(!strcmp(date("m").'23',  substr($invoiceLatest->invoiceId, 0,4)))
+            {
+                $num=((int)substr($invoiceLatest->invoiceId, 4))+1;
+                $num=str_pad($num, 4, "0", STR_PAD_LEFT);
+            }
+            $data['invoiceId']=date("m").'23'.$num;
+        }
+        else
         {
-            $request->validate([
-                'photo' => 'image|mimes:jpeg,png,jpg|max:2048',
-            ]);
+            $data['invoiceId']=date("m").'23'.'0001';
+        }
+        $data['customerId']=$request->input('customerId');
+        $data['totalAmount']=$request->input('totalAmount');
+        $data['paymentMode']=$request->input('paymentMode');
+        $data['discountPercent']=$request->input('discountPercent');
+        $data['discountAmount']=$request->input('discountAmount');
+        $data['shipping']=$request->input('shipping');
+        $data['remark']=$request->input('remark');
+        $data['userId'] = Auth::user()->id;
+        $data['paymentStatus']=0;
+        $data['orderStatus']=1; //1:accepted, 2:dispatch, 3:shipping, 4:delivered, 5:completed 
+        $data['dateCreated']= Carbon::now()->toDateTimeString();
+        $data['paidAmount']=$request->input('totalAmount');
+
+        if($request->input('paymentPartial'))
+        {
+            $data['paidAmount']=$request->input('partialAmount');
+            $arr['partialAmount']=$request->input('partialAmount');
+            $arr['nextPayDate']=$request->input('nextPayDate');
+            $arr['dueAmount']=(float)$request->input('totalAmount') - (float)$request->input('partialAmount');
+
+            $data['partialPayDetails']=json_encode($arr);
+            $data['paymentStatus']=2; //0:nil, 1:complete, 2:partial
+        }
+        $dataOI['orderId']=Orders::insertGetId($data);
+
+
+        $itemIds=[];
+        foreach($request->input() as $key => $value)
+        {
+            if(substr($key,0,5)=="item-")
+            {
+                 array_push($itemIds,substr($key,5));
+                 $dataOI['itemId']=substr($key,5);
+                 $dataOI['quantity']=$value;
+                OrdersItems::insert($dataOI);
+            }
+        }
+        $dataLog['itemIds']=json_encode($itemIds);
+        $dataLog['amountToPay']=$request->input('totalAmount');
+        $dataLog['paidAmount']=$data['paidAmount'];
+        $dataLog['orderId']=$dataOI['orderId'];
+        $dataLog['actionType']='create';
+        $dataLog['time']=$data['dateCreated'];
+        $dataLog['discountPercent']=$request->input('discountPercent');
+        $dataLog['discountAmount']=$request->input('discountAmount');
+        $dataLog['userId'] = Auth::user()->id;
+        OrderLogs::insert($dataLog);
         
-            $imageName = 'customer'.time().'.'.$request->photo->extension();  
-            if($request->photo->move(public_path('customerphotos'), $imageName))
-            $data['photo']=$imageName;
-        }
-        if($request->input('password')&&$request->input('password_confirmation')&&$request->input('email'))
-        {
-            $data['password']=$request->input('password');
-        }
-        //dd($request->input());
-        if(Orders::insert($data))
+        $dataAddr['address']=$request->input('address');
+        $dataAddr['pincode']=$request->input('pincode');
+        $dataAddr['city']=$request->input('city');
+
+        Customers::where('id',$request->input('customerId'))->update($dataAddr);
+
         return redirect(route('pos.sales.orders'));
     }
 
@@ -78,8 +124,13 @@ class OrdersController extends Controller
         //
         if ($request->ajax()) {
 
-            $data = Orders::latest()->get();
+            $data = Orders::leftjoin('customers','customers.id','=','orders.customerId')
+            ->select('orders.*','customers.id as idCustomer',
+            'customers.full_name',
+            'customers.mobile',)
+            ->orderBy('orders.id','desc')->get();
 
+            
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('personal_info', function($row){
@@ -88,11 +139,21 @@ class OrdersController extends Controller
                 ->addColumn('contact_info', function($row){
                     return $row->mobile.'<br>'.$row->email.'</b>';
                 })
-                ->addColumn('address', function($row){
-                    return $row->address;
+                ->addColumn('totalAmount', function($row){
+                    return $row->totalAmount;
+                })
+                ->addColumn('dueAmount', function($row){
+                    return (float)($row->totalAmount)-(float)($row->paidAmount).'</b>';
+                })
+                ->addColumn('orderStatus', function($row){
+                    $status=['1'=>'Accepted', '2'=>'Dispatch', '3'=>'Shipping', '4'=>'Delivered', '5'=>'Completed'];
+                    return $status[$row->orderStatus];
                 })
                 ->addColumn('action', function($row){
-                    $actionBtn = '<button onclick="showData('.$row->id.')" data-toggle="modal" data-target="#addEditModel" class="edit btn btn-success btn-sm"><i class="fa-light fa-edit"></i></button> <button onclick="delData('.$row->id.')" class="delete btn btn-danger btn-sm"><i class="fa-light fa-trash"></i></button>';
+                    $actionBtn = '
+                    <a href= "'.route('pos.sales.orders.getInvoicePrint', ['id' => $row->id] ).'"> <button onclick="getInvoicePrint('.$row->id.')" class="delete btn btn-warning btn-sm"><i class="fa-light fa-print"></i></button></a>
+                    <button onclick="showData('.$row->id.')" data-toggle="modal" data-target="#addEditModel" class="edit btn btn-success btn-sm"><i class="fa-light fa-edit"></i></button>
+                     ';
                     return $actionBtn;
                 })
                 ->rawColumns(['action'])
@@ -117,7 +178,7 @@ class OrdersController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, Customers $customers)
-    {
+    {        echo "hi";die;
         $data['full_name']=$request->input('fullname');
         $data['mobile']=$request->input('mobile');
         $data['email']=$request->input('email');
@@ -170,4 +231,72 @@ class OrdersController extends Controller
         }
         return response()->json($productsMatch);
     }
+    public function getInvoicePrint(Request $request)
+    {
+        //dd($request->input());
+            $data = Orders::where('orders.id',$request->input('id'))->join('customers','customers.id','=','orders.customerId')
+                                        ->select('orders.*','customers.id as idCustomer',
+                                        'customers.full_name',
+                                        'customers.mobile',
+                                        'customers.pincode',
+                                        'customers.address',)
+                                        ->get()->first();
+
+                                     //   dd($data);
+            $invoice['orderId']= $data->id;
+            $invoice['customerId']= $data->customerId;
+            $invoice['full_name']= $data->full_name;
+            $invoice['mobile']= $data->mobile;
+            
+            $invoice['invoiceId']= $data->invoiceId;
+            $invoice['address']=$data->address; 
+            $invoice['city']=$data->city;
+            $invoice['pincode']=$data->pincode;     
+            $invoice['paymentMode']=$data->paymentMode; 
+                
+             $items=OrdersItems::where('orderId',$request->input('id'))->get();
+             $invoice['items']='';
+
+             foreach($items as $item)
+             {
+                $product=Products::where('id',$item->itemId)->get()->first();
+         
+                $invoice['items'].=' <tr align="center">
+                                        <td>'.$product->sku.'</td>
+                                        <td>'.$product->productName.'</td>
+                                        <td>'.number_format((float)$product->price, 2, '.', '').'</td>
+                                        <td>'.$item->quantity.'</td>
+                                        <td>'.number_format(((float)$product->price*(float)$item->quantity), 2, '.', '').'</td>
+                                    </tr>' ;
+             }
+             $invoice['totalAmount']=$data->totalAmount; 
+             $invoice['discountAmount']=$data->discountAmount; 
+             $invoice['discountPercent']=$data->discountPercent; 
+             $invoice['paidAmount']=$data->totalAmount; //paidAmount is payable
+             $invoice['date']=$data->dateCreated;
+             
+
+             if(isset($data->shipping))
+             {
+                $invoice['shippingCharge']='400';
+             }
+
+             if(isset($data->partialPayDetails))
+             {
+                $invoice['partpay']=1;
+                
+                $partPay=json_decode($data->partialPayDetails,true); 
+
+                $invoice['currentPay']=$partPay['partialAmount'];
+                $invoice['nextPayDate']=$partPay['nextPayDate'];
+                $invoice['dueAmount']=(float)$data->totalAmount - (float)$data->paidAmount;
+             }
+             
+             
+
+        $pdf = PDF::loadView('pos.sales.invoice',$invoice);
+
+        return $pdf->download('invoice_clsmn.pdf');
+    }
+
 }

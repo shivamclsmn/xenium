@@ -13,6 +13,7 @@ Route::prefix('pos/dashboard/sales')->group(function () {
         Route::post('/orders/update', [OrdersController::class, 'update'])->name('pos.sales.orders.update');
         Route::get('/orders/getProductsSearch', [OrdersController::class, 'getProductsSearch'])->name('pos.sales.orders.getProductsSearch');
         Route::post('/orders/update', [OrdersController::class, 'update'])->name('pos.sales.orders.update');
+        Route::get('/orders/getInvoicePrint', [OrdersController::class, 'getInvoicePrint'])->name('pos.sales.orders.getInvoicePrint');
 
     });
 });
