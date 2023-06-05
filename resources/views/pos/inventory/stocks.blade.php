@@ -5,9 +5,9 @@
         <div class="card">
             <div class="card-body">
                 <div class="row">
-                    <h2 class="mb-4 col-md-6 text-md-left text-center">Leads</h2>
+                    <h2 class="mb-4 col-md-6 text-md-left text-center">Stocks</h2>
                     <div class="mb-4 col-md-6 text-right">
-                        <button class="btn btn-primary btn-sm" id="btnNew" data-toggle="modal" data-target="#addEditModel">New Lead</button>
+                        <button class="btn btn-primary btn-sm" id="btnNew" data-toggle="modal" data-target="#addEditModel">New Stock</button>
                     </div>
                 </div>
                 <!-- Modal -->
@@ -30,16 +30,18 @@
                                   </ul>
                                   <div class="step-content">
                                     <div class="step-tab-panel" id="step1">
-                                    <input class="form-control" id="id" name="id" type="text" hidden>
+                                    <input  id="id" name="id" type="text" hidden>
                                     <div class="row">
                                           <div class="col-md-12">
                                             <div class="form-group">
                                               <label for="description">Select Product:</label>
-                                              <input type='hidden' name="products" id="products" value=''>
-                                              <div  ><table id="productArea"></table>
-                                              </div><br>
-                                             <input class="form-control" type='text' name="productTyping" id="productTyping" value='' placeholder="Type product name to search">                                                 
+                                              <input class="form-control" type='text' name="productTyping" id="productTyping" value='' placeholder="Type product name to search">                                                 
                                               <ul class="list-group" id='productList'></ul>
+
+                                              <input type='hidden' name="products" id="products" value=''>
+                                              <div  ><table id="productArea" class="table"></table>
+                                              </div>
+
                                             </div>
                                           </div>
                                         </div>
@@ -152,7 +154,7 @@
                           <tr>
                             <th>Sr.#</th>
                             <th>Stock ID</th>
-                            <th>Product ID</th>
+                            <th>Product</th>
                             <th>Price</th>
                             <th>Quantity</th>
                             <th>Batch</th>
@@ -165,64 +167,6 @@
                         </tbody>
                     </table>
                 </div>
-
-
-
-                <div class="modal fade" id="leadHistoryModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog modal-xl">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Lead History</h5>
-                                <button type="button" class="close" data-dismiss="modal" id="closeModal" aria-label="Close">
-                                <span aria-hidden="true"><i class="fa-light fa-close"></i></span>
-                                </button>
-                            </div>
-                            <div class="modal-body" id="demo">
-                               
-                          
-                        
-
-                                  <div class="step-content">
-                                    Lead ID: <b><span id="leadId"></span></b>
-                                    <!-- <div class="step-tab-panel" id="step1"> -->
-                                    
-                                                      <!-- <div class="table-responsive"> -->
-                                                        <table id="leadHistoryDatatable" class="table table-bordered table-hover table-sm">
-
-                                                          <thead>
-                                                            <tr>
-                                                              <th>Sr.#</th>
-                                                              <th>ID</th>
-                                                              <th>Comment</th>
-                                                              <th>Assigned User</th>
-                                                              <th>Comment Type</th>
-                                                              <th>Status</th>
-                                                              <th>Next Calling Date</th>
-                                                            </tr>
-                                                          </thead>
-                                                          <tbody id="tbodyHistory">
-                                                            
-                                                          </tbody>
-                                                          </table>
-
-                                                      <!-- </div> -->
-                                    
- 
-                                    <!-- </div> -->
-                    
-
-                                 
-                                </div>
-                              
-                            </div>  
-                        </div>
-                    </div>
-                </div>
-
-
-
-
-
             </div>
         </div>
     </div>
@@ -247,11 +191,12 @@
                 ajax: "{{ route('pos.inventory.stocks.table') }}",
                 columns: [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                    {data: 'lead_id', name: 'lead_id'},
-                    {data: 'personal_info', name: 'personal_info'},
-                    {data: 'contact_info', name: 'contact_info'},
-                    {data: 'description', name: 'description'},
-                    {data: 'nextCallingDate', name: 'nextCallingDate'},
+                    {data: 'id', name: 'id'},
+                    {data: 'productName', name: 'productName'},
+                    {data: 'pricePerUnit', name: 'pricePerUnit'},
+                    {data: 'quantity', name: 'quantity'},
+                    {data: 'batch', name: 'batch'},
+                    {data: 'date', name: 'date'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ]
             });
@@ -350,7 +295,7 @@
         $( "#btnNew" ).on( "click", function() {
           $('#btnSubmit').html("submit");
           $("#addEditForm").attr('action', "{{ route('pos.inventory.stocks.add')}}");
-          $('input').val('');
+          $('.refreshable').val('');
           $('input').prop('disabled',false);
           $('textarea').prop('disabled',false);
           $('select').prop('disabled',false);
@@ -411,8 +356,8 @@
           {
             $("#products").val($("#products").val()+'-'+id.toString()+'-');
 
-            var str=' <tr><td>'+productName+'</td><td><input class="form-control " type="text" name="price-'+id+'" id="price-'+id+'" placeholder="Fill Price"></td>';
-            str+='<td> <input class="form-control  " type="text" name="quantity-'+id+'" id="quantity-'+id+'" placeholder="Fill Qunatity"> </td><td><i class="fa fa-trash" onclick="removeProduct('+id+')"></i></td></tr>';
+            var str=' <tr><td class="px-3 py-3">'+productName+'</td><td><input class="form-control " type="text" name="price-'+id+'" id="price-'+id+'" placeholder="Fill Price"></td>';
+            str+='<td> <input class="form-control  " type="text" name="quantity-'+id+'" id="quantity-'+id+'" placeholder="Fill Quantity"> </td><td><i class="fa fa-trash" onclick="removeProduct('+id+')"></i></td></tr>';
    
           $("#productArea").append(str);  
           }

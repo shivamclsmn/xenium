@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use DataTables;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 
 class EmployeesController extends Controller
 {
@@ -69,7 +70,8 @@ class EmployeesController extends Controller
             {
                 $data_1['emp_id']=Employees::orderBy('id','DESC')->first()->id;
                 $data_1['username']=$request->input('username');
-                $data_1['password']=$request->input('password');
+                //$data_1['password']=$request->input('password');
+                $data_1['password']=Hash::make($request->password);
                 $data_1['name']=$request->input('firstname');
                 $data_1['email']=$request->input('email');
                 //$data_1['email_verified_at']=1;
@@ -177,7 +179,8 @@ class EmployeesController extends Controller
             &&$request->input('password_confirmation')
             &&$request->input('email'))
             {
-                $data_1['password']=$request->input('password');
+                //$data_1['password']=$request->input('password');
+                $data_1['password']=Hash::make($request->password);
                 $data_1['name']=$request->input('firstname');
                 $data_1['email']=$request->input('email');
 

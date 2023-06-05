@@ -37,14 +37,14 @@
                                             <div class="form-group">
                                               <label for="lastName1">Phone Number:</label>
                                               <input type="hidden" name="customerId" id="customerId" >
-                                              <input class="form-control" type="text" placeholder="Mobile" name="mobile" id="mobile" pattern="[0-9]{10}" required>
+                                              <input class="form-control refreshable" type="text" placeholder="Mobile" name="mobile" id="mobile" pattern="[0-9]{10}" required>
                                               <ul class="list-group" id='customers'></ul>
                                             </div>
                                           </div>
                                           <div class="col-md-6">
                                             <div class="form-group">
                                               <label for="firstName1">Email Address:</label>
-                                              <input class="form-control" type="text" placeholder="Email" name="email" id="email">
+                                              <input class="form-control refreshable" type="text" placeholder="Email" name="email" id="email">
                                             </div>
                                           </div>
 
@@ -53,13 +53,13 @@
                                           <div class="col-md-6">
                                             <div class="form-group">
                                               <label for="firstName1">Full Name:</label>
-                                              <input class="form-control" type="text" id="fullname" placeholder="Full Name" name="fullname" required>
+                                              <input class="form-control refreshable" type="text" id="fullname" placeholder="Full Name" name="fullname" required>
                                             </div>
                                           </div>
                                           <div class="col-md-6">
                                             <div class="form-group">
                                               <label for="location">Location:</label>
-                                              <input class="form-control" type="text" id="location" name="location" required>
+                                              <input class="form-control refreshable" type="text" id="location" name="location" required>
                                             </div>
                                           </div>
                                         </div>
@@ -70,7 +70,7 @@
                                               <input type='hidden' name="products" id="products" value=''>
                                               <div  id="productArea">
                                               </div><br>
-                                             <input class="form-control" type='text' name="productTyping" id="productTyping" value='' placeholder="Type product name to search">                                                 
+                                             <input class="form-control refreshable" type='text' name="productTyping" id="productTyping" value='' placeholder="Type product name to search">                                                 
                                               <ul class="list-group" id='productList'></ul>
                                             </div>
                                           </div>
@@ -79,7 +79,7 @@
                                           <div class="col-md-12">
                                             <div class="form-group">
                                               <label for="description">Query/Lead description:</label>
-                                              <textarea class="form-control" type="text" id="description" name="description" ></textarea>
+                                              <textarea class="form-control refreshable" type="text" id="description" name="description" ></textarea>
                                             </div>
                                           </div>
                                         </div>
@@ -121,7 +121,7 @@
                                           <div class="col-md-9">
                                             <div class="form-group">
                                               <label for="comment">Comment:</label>
-                                              <textarea class="form-control" type="text" id="comment" name="comment" ></textarea>
+                                              <textarea class="form-control refreshable" type="text" id="comment" name="comment" ></textarea>
                                             </div>
                                           </div>
                                         </div>
@@ -392,7 +392,8 @@
         $( "#btnNew" ).on( "click", function() {
           $('#btnSubmit').html("submit");
           $("#addEditForm").attr('action', "{{ route('pos.crm.leads.add')}}");
-          $('input').val('');
+          $('.refreshable').val('');
+          $('input').prop('disabled',false);
           $('input').prop('disabled',false);
           $('textarea').prop('disabled',false);
           $('select').prop('disabled',false);

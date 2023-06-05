@@ -36,7 +36,7 @@
                                           <div class="col-md-6">
                                             <div class="form-group">
                                               <label for="firstName1">Full Name:</label>
-                                              <input class="form-control" type="text" id="fullname" placeholder="Full Name" name="fullname" required>
+                                              <input class="form-control refreshable" type="text" id="fullname" placeholder="Full Name" name="fullname" required>
                                             </div>
                                           </div>
                                         </div>
@@ -44,13 +44,13 @@
                                           <div class="col-md-6">
                                             <div class="form-group">
                                               <label for="firstName1">Email Address:</label>
-                                              <input class="form-control" type="text" placeholder="Email" name="email" id="email">
+                                              <input class="form-control refreshable" type="text" placeholder="Email" name="email" id="email">
                                             </div>
                                           </div>
                                           <div class="col-md-6">
                                             <div class="form-group">
                                               <label for="lastName1">Phone Number:</label>
-                                              <input class="form-control" type="text" placeholder="Mobile" name="mobile" id="mobile" pattern="[0-9]{10}" required>
+                                              <input class="form-control refreshable" type="text" placeholder="Mobile" name="mobile" id="mobile" pattern="[0-9]{10}" required>
                                             </div>
                                           </div>
                                         </div>
@@ -60,19 +60,19 @@
                                         <div class="col-md-12">
                                           <div class="form-group">
                                             <label for="address">Address</label>
-                                            <input class="form-control" id="address" type="text" id="address" name="address" placeholder="Street Address">
+                                            <input class="form-control refreshable" id="address" type="text" id="address" name="address" placeholder="Street Address">
                                           </div>
                                         </div>
                                         <div class="col-md-6">
                                           <div class="form-group">
                                             <label for="pincode">Pincode</label>
-                                            <input class="form-control" id="videoUrl1" type="text" id="pincode" name="pincode" placeholder="Pincode">
+                                            <input class="form-control refreshable" id="videoUrl1" type="text" id="pincode" name="pincode" placeholder="Pincode">
                                           </div>
                                         </div>
                                         <div class="col-md-6">
                                           <div class="form-group">
                                             <label for="city">City / State</label>
-                                            <input class="form-control" id="city" type="text" name="city" placeholder="city">
+                                            <input class="form-control refreshable" id="city" type="text" name="city" placeholder="city">
                                           </div>
                                         </div>
                                       </div>
@@ -231,7 +231,8 @@
         $( "#btnNew" ).on( "click", function() {
           $('#btnSubmit').html("submit");
           $("#addEditForm").attr('action', "{{ route('pos.crm.dealers.add')}}");
-          $('input').val('');
+          $('.refreshable').val('');
+          $('input').prop('disabled',false);
         } );
     </script>
 @endsection

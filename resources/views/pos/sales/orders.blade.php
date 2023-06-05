@@ -418,7 +418,7 @@
         $( "#btnNew" ).on( "click", function() {
           $('#btnSubmit').html("submit");
           $("#addEditForm").attr('action', "{{ route('pos.sales.orders.add')}}");
-          //$('.refreshable').val('');
+          $('.refreshable').val('');
 
           $('#entriesCount').val(0);
           $('#discountPercent').val(0);

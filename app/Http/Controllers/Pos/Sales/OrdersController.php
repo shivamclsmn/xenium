@@ -7,6 +7,7 @@ use App\Models\Sales\Orders;
 use App\Models\Sales\OrderLogs;
 use App\Models\User;
 use App\Models\Inventory\Products;
+use App\Models\Inventory\Stocks;
 use App\Models\Sales\OrdersItems;
 use App\Models\CRM\Customers;
 use Illuminate\Http\Request;
@@ -48,16 +49,16 @@ class OrdersController extends Controller
         if(isset($invoiceLatest->invoiceId))
         {   
             $num='0001';
-            if(!strcmp(date("m").'23',  substr($invoiceLatest->invoiceId, 0,4)))
+            if(!strcmp(date("m").date("y"),  substr($invoiceLatest->invoiceId, 0,4)))
             {
                 $num=((int)substr($invoiceLatest->invoiceId, 4))+1;
                 $num=str_pad($num, 4, "0", STR_PAD_LEFT);
             }
-            $data['invoiceId']=date("m").'23'.$num;
+            $data['invoiceId']=date("m").date("y").$num;
         }
         else
         {
-            $data['invoiceId']=date("m").'23'.'0001';
+            $data['invoiceId']=date("m").date("y").'0001';
         }
         $data['customerId']=$request->input('customerId');
         $data['totalAmount']=$request->input('totalAmount');
@@ -86,16 +87,75 @@ class OrdersController extends Controller
 
 
         $itemIds=[];
+        $availability=true;
+        $stockOverProductId='';
+
         foreach($request->input() as $key => $value)
         {
             if(substr($key,0,5)=="item-")
             {
                  array_push($itemIds,substr($key,5));
-                 $dataOI['itemId']=substr($key,5);
-                 $dataOI['quantity']=$value;
-                OrdersItems::insert($dataOI);
+                 $itemId=substr($key,5);
+                 $asp=Stocks::where('productId',$itemId)->sum('quantity');
+                 // asp = Available Stock of a Product
+
+                 if((int)$asp <  (int)$value) //$value contains the quantity of requested item
+                 {
+                    $availability=false;
+                 }
+
             }
         }
+        if($availability)
+        {
+
+            foreach($itemIds as $itemId)
+            {
+                     $dataOI['itemId']=$itemId;
+                     $dataOI['quantity']=$request->input('item-'.$itemId);
+
+                        if(OrdersItems::insert($dataOI))
+                        {
+                            //$asp=(int)Stocks::where('productId',$itemId)->sum('quantity');
+                            // asp = Available Stock of a Product
+
+                            $stockDecrement=0;
+                            $i=0;
+
+                            do{
+                                $oasp=Stocks::where('productId',$dataOI['itemId'])
+                                ->where('quantity','>',0)->orderBy('id')
+                                ->skip($i++)->take(1)->first();
+                                        //oasp = Oldest Available Stock of a Product
+                                $thisStockQuantity=(int)$oasp->quantity;
+
+                                if($stockDecrement < (int)$dataOI['quantity'])
+                                {
+                                    $stockDecrement+=$thisStockQuantity;
+                                    $thisStockQuantity=0;
+                                    
+                                }
+                                else
+                                {
+                                    $thisStockQuantity=(int)$dataOI['quantity']-$stockDecrement;
+                                    $stockDecrement+=$thisStockQuantity-(int)$dataOI['quantity'];
+
+                                }
+                                echo $i.' '.$thisStockQuantity.' '.$stockDecrement; 
+                                    Stocks::where('id',$oasp->id)->update(['quantity'=>$thisStockQuantity]);
+
+                            }while($stockDecrement < (int)$dataOI['quantity']);
+                            die;
+                        }
+                                     
+            }
+        }
+        else
+        {
+            dd('not available');
+            return redirect(route('pos.sales.orders'))->with('msg-failed','No Sufficient Stock, Product ID-'.$stockOverProductId);
+        }
+
         $dataLog['itemIds']=json_encode($itemIds);
         $dataLog['amountToPay']=$request->input('totalAmount');
         $dataLog['paidAmount']=$data['paidAmount'];
@@ -106,7 +166,7 @@ class OrdersController extends Controller
         $dataLog['discountAmount']=$request->input('discountAmount');
         $dataLog['userId'] = Auth::user()->id;
         OrderLogs::insert($dataLog);
-        
+
         $dataAddr['address']=$request->input('address');
         $dataAddr['pincode']=$request->input('pincode');
         $dataAddr['city']=$request->input('city');

@@ -40,16 +40,41 @@ class StocksController extends Controller
      */
     public function store(Request $request)
     {
-        $data['name']=$request->input('vendorName');
-        $data['companyName']=$request->input('companyName');
-        $data['mobile']=$request->input('mobile');
-        $data['email']=$request->input('email');
-        $data['address']=$request->input('address');
+        $data['date']=date("Y-m-d");
 
-        Stocks::insert($data);
+        $data['vendorId']=$request->input('vendorId');
+
+        foreach($request->input() as $key => $value)
+        {
+            if(substr($key,0,6)=="price-")
+            {
+              $productId=substr($key,6);
+              $data['productId']=substr($key,6);
+              $data['pricePerUnit']=$value;
+              $data['quantity']=$request->input('quantity-'.$productId);
+
+              $stockLatest=Stocks::orderBy('id','desc')->first();
+              if(isset($stockLatest->batch))
+              {   
+                  $num='0001';
+                  if(!strcmp(date("y").date("m").date("d"),  substr($stockLatest->batch, 0,6)))
+                  {
+                      $num=((int)substr($stockLatest->batch, 6))+1;
+                      $num=str_pad($num, 4, "0", STR_PAD_LEFT);
+                  }
+                  $data['batch']=date("y").date("m").date("d").$num;
+              }
+              else 
+              {
+                $data['batch']=date("y").date("m").date("d").'0001';
+              }
+
+                 Stocks::insert($data);
+            }
+        }
 
 
-        return redirect(route('pos.inventory.vendors'));
+        return redirect(route('pos.inventory.stocks'));
     }
 
     /**
@@ -61,17 +86,17 @@ class StocksController extends Controller
         if ($request->ajax()) {
 
             //$data = Stocks::latest()->get();
-            $data = Stocks::
-                        orderBy('id','desc')
+            $data = Stocks::leftjoin('products','stocks.productId','=','products.id')
+                        ->select('stocks.*','products.productName')
+                        ->orderBy('id','desc')
                         ->get();
             
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function($row){
                     $actionBtn = 
-                    '<button onclick="getProductImages('.$row->id.')" data-toggle="modal" data-target="#addUpdateImageModel" class="delete btn btn-primary btn-sm"><i class="fa-light fa-image"></i></button>
-                    <button onclick="showData('.$row->id.')" data-toggle="modal" data-target="#addEditModel" class="edit btn btn-success btn-sm"><i class="fa-light fa-edit"></i></button> 
-                    <button onclick="delData('.$row->id.')" class="delete btn btn-danger btn-sm"><i class="fa-light fa-trash"></i></button>';
+                    '<button onclick="showData('.$row->id.')" data-toggle="modal" data-target="#addEditModel" class="edit btn btn-success btn-sm"><i class="fa-light fa-edit"></i></button> 
+                  ';
                     return $actionBtn;
                 })
                 ->rawColumns(['action'])
@@ -109,7 +134,7 @@ class StocksController extends Controller
 
          Stocks::where('id',$request->input('id'))->update($data);
 
-        return redirect(route('pos.inventory.vendors'));
+        return redirect(route('pos.inventory.stocks'));
     }
 
     /**
@@ -260,7 +285,7 @@ class StocksController extends Controller
             }
 
         }
-        return redirect(route('pos.inventory.vendors'));
+        return redirect(route('pos.inventory.stocks'));
     }
     public function getVendorsSearch(Request $request)
     {
