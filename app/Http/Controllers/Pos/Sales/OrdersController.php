@@ -101,9 +101,8 @@ class OrdersController extends Controller
 
                  if((int)$asp <  (int)$value) //$value contains the quantity of requested item
                  {
-                    $availability=false;
+                    $availability=false; //Sufficient stock is not available of this particular item hence order cannot be proceed
                  }
-
             }
         }
         if($availability)
@@ -119,36 +118,47 @@ class OrdersController extends Controller
                             //$asp=(int)Stocks::where('productId',$itemId)->sum('quantity');
                             // asp = Available Stock of a Product
 
+                            $stocksCount=Stocks::where('productId',$dataOI['itemId'])
+                            ->where('quantity','>',0)->count('id');
+
                             $stockDecrement=0;
                             $i=0;
+                            $required=(int)$dataOI['quantity'];
 
-                            do{
+                            while($required>0 && $i< $stocksCount)
+                            {
                                 $oasp=Stocks::where('productId',$dataOI['itemId'])
                                 ->where('quantity','>',0)->orderBy('id')
                                 ->skip($i++)->take(1)->first();
                                         //oasp = Oldest Available Stock of a Product
-                                $thisStockQuantity=(int)$oasp->quantity;
-
-                                if($stockDecrement < (int)$dataOI['quantity'])
+                                if(isset($oasp->quantity))
                                 {
-                                    $stockDecrement+=$thisStockQuantity;
-                                    $thisStockQuantity=0;
+                                    $stockQuantity=(int)$oasp->quantity;
+                                }     
+                                else
+                                {
+                                    $stockQuantity=0;
+                                } 
+
+                                if($stockQuantity <= $required)
+                                {
+                                    $stockQuantity=0;
+                                    $required=$required-$stockQuantity;
                                     
                                 }
                                 else
                                 {
-                                    $thisStockQuantity=(int)$dataOI['quantity']-$stockDecrement;
-                                    $stockDecrement+=$thisStockQuantity-(int)$dataOI['quantity'];
-
+                                    $stockQuantity=$stockQuantity-$required;
+                                    $required=0;
+                                   
                                 }
-                                echo $i.' '.$thisStockQuantity.' '.$stockDecrement; 
-                                    Stocks::where('id',$oasp->id)->update(['quantity'=>$thisStockQuantity]);
-
-                            }while($stockDecrement < (int)$dataOI['quantity']);
-                            die;
+                                echo $i.' '.$stockQuantity.' '.$required.'<br>'; 
+                                    Stocks::where('id',$oasp->id)->update(['quantity'=>$stockQuantity]);
+                            }
+                            
                         }
                                      
-            }
+            }die;
         }
         else
         {
