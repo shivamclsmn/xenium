@@ -49,7 +49,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                             <label >Select Vendor:</label>
-                                            <input type="hidden" name="vendorId" id="vendorId" >
+                                            <input type="hidden" name="vendorId" id="vendorId" required>
                                               <input class="form-control" type="text" placeholder="Type vendor name or mobile to search" name="vendor" id="vendor" >
                                               <ul class="list-group" id='vendors'></ul>
                                             </div>

@@ -115,36 +115,24 @@ class OrdersController extends Controller
 
                         if(OrdersItems::insert($dataOI))
                         {
-                            //$asp=(int)Stocks::where('productId',$itemId)->sum('quantity');
-                            // asp = Available Stock of a Product
-
                             $stocksCount=Stocks::where('productId',$dataOI['itemId'])
                             ->where('quantity','>',0)->count('id');
 
-                            $stockDecrement=0;
+                            $productStocks=Stocks::where('productId',$dataOI['itemId'])
+                            ->where('quantity','>',0)->orderBy('id')->get();
+
                             $i=0;
                             $required=(int)$dataOI['quantity'];
 
-                            while($required>0 && $i< $stocksCount)
+                            foreach($productStocks as $stock)
                             {
-                                $oasp=Stocks::where('productId',$dataOI['itemId'])
-                                ->where('quantity','>',0)->orderBy('id')
-                                ->skip($i++)->take(1)->first();
-                                        //oasp = Oldest Available Stock of a Product
-                                if(isset($oasp->quantity))
-                                {
-                                    $stockQuantity=(int)$oasp->quantity;
-                                }     
-                                else
-                                {
-                                    $stockQuantity=0;
-                                } 
+                                    $stockQuantity=(int)$stock->quantity;
+                                    echo 'before:'.$i.' SQ:'.$stockQuantity.' Req:'.$required.'<br>';  
 
                                 if($stockQuantity <= $required)
                                 {
-                                    $stockQuantity=0;
                                     $required=$required-$stockQuantity;
-                                    
+                                    $stockQuantity=0;
                                 }
                                 else
                                 {
@@ -152,17 +140,16 @@ class OrdersController extends Controller
                                     $required=0;
                                    
                                 }
-                                echo $i.' '.$stockQuantity.' '.$required.'<br>'; 
-                                    Stocks::where('id',$oasp->id)->update(['quantity'=>$stockQuantity]);
+                                   Stocks::where('id',$stock->id)->update(['quantity'=>$stockQuantity]);
                             }
                             
                         }
                                      
-            }die;
+            }
         }
         else
         {
-            dd('not available');
+            //stock not available 
             return redirect(route('pos.sales.orders'))->with('msg-failed','No Sufficient Stock, Product ID-'.$stockOverProductId);
         }
 
