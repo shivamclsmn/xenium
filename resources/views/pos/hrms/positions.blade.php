@@ -29,13 +29,13 @@
                                         <div class="col-md-12">
                                             <fieldset class="form-group">
                                                 <label>Positions</label>
-                                                <input class="form-control" id="position" name="position" type="text" required>
+                                                <input class="form-control refreshable" id="position" name="position" type="text" required>
                                             </fieldset>
                                         </div>
                                         <div class="col-md-12">
                                             <fieldset class="form-group">
                                                 <label>Max Employees</label>
-                                                <input class="form-control" id="max_pos" name="max_pos" type="text" required>
+                                                <input class="form-control refreshable" id="max_pos" name="max_pos" type="text" required>
                                             </fieldset>
                                         </div>
                                         <div class="col-md-12">
@@ -183,6 +183,8 @@
         $( "#btnNew" ).on( "click", function() {
           $('#btnSubmit').html("submit");
           $("#addEditForm").attr('action', "{{ route('pos.hrms.positions.add')}}");
+          $('.refreshable').val('');
+          $('input').prop('disabled',false);
         } );
     </script>
 @endsection

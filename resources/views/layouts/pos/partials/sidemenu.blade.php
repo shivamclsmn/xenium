@@ -9,7 +9,7 @@
           <a href="#"><i class="fa fa-circle text-success"></i> Online</a> </div>
       </div>
       <!-- sidebar menu -->
-      <ul class="sidebar-menu" data-widget="tree">
+      <ul class="sidebar-menu" data-widget="tree" style="text-transform: capitalize;">
         @if($modules) 
           @foreach ($modules as $module)
           <li class="treeview"> <a href="#"> <i class="fa-light {{ $module->icon }}"></i> <span>{{ $module->module}}</span> <span class="pull-right-container"> <i class="fa-light fa-angle-left pull-right"></i> </span> </a>

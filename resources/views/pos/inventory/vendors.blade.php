@@ -1,13 +1,14 @@
-@extends('layouts.pos.dashboard', ['title' => 'Dealers', 'module' => 'CRM'])
+@extends('layouts.pos.dashboard', ['title' => 'Vendors', 'module' => 'Inventory'])
 @section('content')
 <div class="row">
     <div class="col-12">
         <div class="card">
             <div class="card-body">
                 <div class="row">
-                    <h2 class="mb-4 col-md-6 text-md-left text-center">Dealers</h2>
-                    <div class="mb-4 col-md-6 text-right">
-                        <button class="btn btn-primary btn-sm" id="btnNew" data-toggle="modal" data-target="#addEditModel">New Dealers</button>
+                    <h2 class="mb-4 col-md-4 text-md-left text-center">Vendors</h2>
+                    <div class="mb-4 col-md-4 " id="error"></div>
+                    <div class="mb-4 col-md-4 text-right">
+                        <button class="btn btn-primary btn-sm" id="btnNew" data-toggle="modal" data-target="#addEditModel">New vendor</button>
                     </div>
                 </div>
                 <!-- Modal -->
@@ -21,96 +22,86 @@
                                 </button>
                             </div>
                             <div class="modal-body" id="demo">
-                                <form action={{route('pos.crm.dealers.add')}} method='post' id="addEditForm" enctype="multipart/form-data">
+                                <form action={{route('pos.inventory.vendors.add')}} method='post' id="addEditForm" enctype="multipart/form-data">
                                   @csrf
                                 <div class="step-app">
                                   <ul class="step-steps">
-                                    <li><a href="#step1"><span class="number">1</span> Personal Info</a></li>
-                                    <li><a href="#step2"><span class="number">2</span> Contact Info</a></li>
-                                    <li><a href="#step3"><span class="number">3</span> Customer Type Info</a></li>
+                                    <li><a href="#step1"><span class="number">1</span> Vendor Info</a></li>
+                                    <!-- <li><a href="#step2"><span class="number">2</span> Specifications</a></li> -->
                                   </ul>
                                   <div class="step-content">
                                     <div class="step-tab-panel" id="step1">
-                                    <input class="form-control" id="id" name="id" type="text" hidden>
+                                     <input class="form-control" id="id" name="id" type="text" hidden>
                                         <div class="row m-t-2">
                                           <div class="col-md-6">
                                             <div class="form-group">
-                                              <label for="firstName1">Full Name:</label>
-                                              <input class="form-control refreshable" type="text" id="fullname" placeholder="Full Name" name="fullname" required>
+                                              <label for="vendorName">Vendor Name:</label>
+                                              <input class="form-control" type="text" id="vendorName" placeholder="name" name="vendorName" required>
+                                              <input class="form-control" type="hidden" id="vendorId" placeholder="name" name="vendorId">
                                             </div>
                                           </div>
-                                        </div>
-                                        <div class="row">
+                                          <!-- <div class="col-md-6">
+                                            <div class="form-group">
+                                              <label for="vendorCategory">Category:</label>
+                                              <select class="form-control" type="text" onchange='getSpecForm()' id="vendorCategory" placeholder="name" name="vendorCategory" required>
+                                              <option>Select Category</option>    
+                                              @foreach($categories as $category)
+                                                <option value={{$category->id}}>{{$category->name}}</option>
+                                                @endforeach
+                                              </select>
+                                            </div>
+                                          </div> -->
                                           <div class="col-md-6">
                                             <div class="form-group">
-                                              <label for="firstName1">Email Address:</label>
-                                              <input class="form-control refreshable" type="text" placeholder="Email" name="email" id="email">
+                                              <label for="vendorQuantity">Company name:</label>
+                                              <input class="form-control" type="text" id="companyName" placeholder="Company" name="companyName" required>
+                                            </div>
+                                          </div>                                          <div class="col-md-6">
+                                            <div class="form-group">
+                                              <label for="mobile">Mobile:</label>
+                                              <input class="form-control" type="text" id="mobile" placeholder="mobile" name="mobile" required>
+                                            </div>
+                                          </div>                         
+                                          <div class="col-md-6">
+                                            <div class="form-group">
+                                              <label for="isFeatured">Email:</label>
+                                              <input class="form-control" type="text" class="form-control" name="email" id="email" required>
+                                         
                                             </div>
                                           </div>
                                           <div class="col-md-6">
                                             <div class="form-group">
-                                              <label for="lastName1">Phone Number:</label>
-                                              <input class="form-control refreshable" type="text" placeholder="Mobile" name="mobile" id="mobile" pattern="[0-9]{10}" required>
+                                              <label for="address">Address:</label>
+                                              <input class="form-control" type="text" class="form-control" name="address" id="address" required>
+                                         
                                             </div>
                                           </div>
                                         </div>
-                                    </div>
-                                    <div class="step-tab-panel" id="step2">
-                                      <div class="row m-t-2">
-                                        <div class="col-md-12">
-                                          <div class="form-group">
-                                            <label for="address">Address</label>
-                                            <input class="form-control refreshable" id="address" type="text" id="address" name="address" placeholder="Street Address">
-                                          </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                          <div class="form-group">
-                                            <label for="pincode">Pincode</label>
-                                            <input class="form-control refreshable" id="videoUrl1" type="text" id="pincode" name="pincode" placeholder="Pincode">
-                                          </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                          <div class="form-group">
-                                            <label for="city">City / State</label>
-                                            <input class="form-control refreshable" id="city" type="text" name="city" placeholder="city">
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
                                     
-                                    <div class="step-tab-panel" id="step3">
-                                      <div class="row m-t-2">
-                                        <div class="col-md-6">
-                                          <div class="form-group">
-                                          <label for="isDealer">Type of customer</label><br>
-                                          <input type="radio" id="customer" name="isDealer" value=0 >
-                                          <label for="customer">Customer</label><br>
-                                          <input type="radio" id="dealer" name="isDealer" value=1 checked>
-                                          <label for="dealer">Dealer</label><br>                                                                  
-                                          </div>
-                                        </div>
-
-                                      </div>
                                     </div>
+   
+
                                   </div>
                                   <div class="step-footer">
-                                    <button data-direction="prev" class="btn btn-light">Previous</button>
-                                    <button data-direction="next" class="btn btn-primary">Next</button>
                                     <button type='submit' id='btnSubmit' data-direction="finish" class="btn btn-primary">Submit</button>
                                   </div>
                                 </div>
-                                <form>
+                              </form>
                             </div>  
                         </div>
                     </div>
                 </div>
+
+
                 <div class="table-responsive">
                     <table id="datatable" class="table table-bordered table-hover table-sm">
                         <thead>
                           <tr>
-                            <th>ID #</th>
-                            <th>Personal Info</th>
-                            <th>Contact Info</th>
+                            <th>Sr. #</th>
+                            <th>Vendor Name</th>
+                            <th>Company Name</th>
+                            <th>Mobile</th>
+                            <th>Email</th>
                             <th>Address</th>
                             <th>Actions</th>
                           </tr>
@@ -127,10 +118,13 @@
 @endsection
 @section('styles')
 <link rel="stylesheet" href="{{ asset('assets/plugins/datatables/datatables.min.css') }}" type="text/css" />
+<link rel="stylesheet" href="{{ asset('assets/plugins/dropify/dropify.min.css') }}" type="text/css" />
+
 <link rel="stylesheet" href="{{ asset('assets/plugins/formwizard/jquery-steps.css') }}">
 @endsection
 @section('scripts')
     <script type="text/javascript" src="{{ asset('assets/plugins/datatables/datatables.min.js')}}"></script>
+    <script type="text/javascript" src="{{ asset('assets/plugins/dropify/dropify.min.js')}}"></script>
     <!-- form wizard --> 
     <script src="{{ asset('assets/plugins/formwizard/jquery-steps.js') }}"></script> 
     <script>
@@ -141,17 +135,19 @@
                 processing: true,
                 serverSide: true,
                 responsive: true,
-                ajax: "{{ route('pos.crm.dealers.table') }}",
+                ajax: "{{ route('pos.inventory.vendors.table') }}",
                 columns: [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                    {data: 'personal_info', name: 'personal_info'},
-                    {data: 'contact_info', name: 'contact_info'},
+                    {data: 'name', name: 'name'},
+                    {data: 'companyName', name: 'companyName'},
+                    {data: 'mobile', name: 'mobile'},
+                    {data: 'email', name: 'email'},
                     {data: 'address', name: 'address'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ]
             });
         });
-            
+        
         $('#addBtn').on('click', function(e) {
             $.ajaxSetup({
                 headers: {
@@ -162,7 +158,7 @@
             $(".save-btn").html('<i class="fa-light fa-loader rotate"></i>');
             $.ajax({
                 data: $('#addEditForm').serialize(),
-                url: "{{ route('pos.crm.dealers.add') }}",
+                url: "{{ route('pos.inventory.vendors.add') }}",
                 type: 'POST',
                 dataType: 'JSON',
                 success: function(data) {
@@ -184,20 +180,20 @@
         function showData(id) {
             $.ajax({
                 data: {'id':id},
-                url: "{{ route('pos.crm.dealers.show') }}",
+                url: "{{ route('pos.inventory.vendors.show') }}",
                 type: 'GET',
                 dataType: 'JSON',
                 success: function(response) {
                   console.log(response);
                     $('#id').val(response.id);                  
-                    $('#fullname').val(response.full_name);
+                    $('#vendorName').val(response.name);
+                    $('#companyName').val(response.companyName);
                     $('#mobile').val(response.mobile);
                     $('#email').val(response.email);
                     $('#address').val(response.address);
-                    $('#city').val(response.city);
-
-                    $("#addEditForm").attr('action', "{{ route('pos.crm.dealers.update')}}"); 
-                    $('#btnSubmit').html("Update");           
+                    $("#addEditForm").attr('action', "{{ route('pos.inventory.vendors.update')}}"); 
+                    $('#btnSubmit').html("Update");  
+                    getSpecForm();         
                 }
             });
         }
@@ -210,12 +206,19 @@
                 });
                 $.ajax({
                     type: 'POST',
-                    url: "{{ route('pos.crm.dealers.delete') }}",
+                    url: "{{ route('pos.inventory.vendors.delete') }}",
                     data: {'id': id},
                     dataType: 'JSON',
                     success: function(response) {
                         $('#datatable').DataTable().ajax.reload();
+                    },
+                    error: function(response){
+                  if(response.error = 500) {
+                        $('#error').html('<p class="alert alert-danger">Please deleted all images vendor before. </p>');
+                        console.log(response.responseJSON.message);
+                        $("#error").fadeTo(5500, 0.0);
                     }
+                }
                 });
             }
         }
@@ -225,14 +228,17 @@
 
             }
         });
+
         $( "#btnSubmit" ).on( "click", function() {
           $( "#addEditForm" ).trigger( "submit" );
         } );
         $( "#btnNew" ).on( "click", function() {
           $('#btnSubmit').html("submit");
-          $("#addEditForm").attr('action', "{{ route('pos.crm.dealers.add')}}");
-          $('.refreshable').val('');
-          $('input').prop('disabled',false);
+          $("#addEditForm").attr('action', "{{ route('pos.inventory.vendors.add')}}");
+          $("#addEditForm")[0].reset();
+          $("#vendorId").val('');
         } );
+
     </script>
+
 @endsection

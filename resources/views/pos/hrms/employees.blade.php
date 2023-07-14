@@ -37,13 +37,13 @@
                                           <div class="col-md-6">
                                             <div class="form-group">
                                               <label for="firstName1">First Name:</label>
-                                              <input class="form-control" type="text" id="firstname" placeholder="First Name" name="firstname" required>
+                                              <input class="form-control refreshable" type="text" id="firstname" placeholder="First Name" name="firstname" required>
                                             </div>
                                           </div>
                                           <div class="col-md-6">
                                             <div class="form-group">
                                               <label for="lastName1">Last Name:</label>
-                                              <input class="form-control" type="text" id="lastname" placeholder="Last Name" name="lastname" required>
+                                              <input class="form-control refreshable" type="text " id="lastname" placeholder="Last Name" name="lastname" required>
                                             </div>
                                           </div>
                                         </div>
@@ -51,13 +51,13 @@
                                           <div class="col-md-6">
                                             <div class="form-group">
                                               <label for="firstName1">Email Address:</label>
-                                              <input class="form-control" type="text" placeholder="Email" name="email" id="email">
+                                              <input class="form-control refreshable" type="text" placeholder="Email" name="email" id="email">
                                             </div>
                                           </div>
                                           <div class="col-md-6">
                                             <div class="form-group">
                                               <label for="lastName1">Phone Number:</label>
-                                              <input class="form-control" type="text" placeholder="Mobile" name="mobile" id="mobile" pattern="[0-9]{10}" required>
+                                              <input class="form-control refreshable" type="text" placeholder="Mobile" name="mobile" id="mobile" pattern="[0-9]{10}" required>
                                             </div>
                                           </div>
                                         </div>
@@ -75,7 +75,7 @@
                                           <div class="col-md-6">
                                             <div class="form-group">
                                               <label for="dob">Date of Birth :</label>
-                                              <input class="form-control" id="dob" type="date" name="dob" required >
+                                              <input class="form-control refreshable" id="dob" type="date" name="dob" required >
                                             </div>
                                           </div>
                                         </div>
@@ -86,31 +86,31 @@
                                         <div class="col-md-12">
                                           <div class="form-group">
                                             <label for="address">Address</label>
-                                            <input class="form-control" id="address" type="text" id="address" name="address" placeholder="Street Address">
+                                            <input class="form-control refreshable" id="address" type="text" id="address" name="address" placeholder="Street Address">
                                           </div>
                                         </div>
                                         <div class="col-md-6">
                                           <div class="form-group">
                                             <label for="pincode">Pincode</label>
-                                            <input class="form-control" id="videoUrl1" type="text" id="pincode" name="pincode" placeholder="Pincode">
+                                            <input class="form-control refreshable" id="videoUrl1" type="text" id="pincode" name="pincode" placeholder="Pincode">
                                           </div>
                                         </div>
                                         <div class="col-md-6">
                                           <div class="form-group">
                                             <label for="city">City / State</label>
-                                            <input class="form-control" id="city" type="text" name="city" placeholder="city">
+                                            <input class="form-control refreshable" id="city" type="text" name="city" placeholder="city">
                                           </div>
                                         </div>
                                         <div class="col-md-6">
                                           <div class="form-group">
                                             <label for="aadhar">Aadhar</label>
-                                            <input class="form-control" id="videoUrl1" type="text" id="aadhar" name="aadhar" placeholder="0000 0000 0000">
+                                            <input class="form-control refreshable" id="videoUrl1" type="text" id="aadhar" name="aadhar" placeholder="0000 0000 0000">
                                           </div>
                                         </div>
                                         <div class="col-md-6">
                                           <div class="form-group">
                                             <label for="emergency">Emergency Contact</label>
-                                            <input class="form-control" id="city" type="text" id="emergency"  name="emergency" placeholder="Emergency number">
+                                            <input class="form-control refreshable" id="city" type="text" id="emergency"  name="emergency" placeholder="Emergency number">
                                           </div>
                                         </div>
                                       </div>
@@ -132,25 +132,25 @@
                                         <div class="col-md-6">
                                           <div class="form-group">
                                             <label for="salary">Salary</label>
-                                            <input class="form-control" id="salary" type="text" name="salary">
+                                            <input class="form-control refreshable" id="salary" type="text" name="salary">
                                           </div>
                                         </div>
                                         <div class="col-md-6">
                                           <div class="form-group">
                                             <label for="doj">Joining date</label>
-                                            <input class="form-control" id="doj" type="date" name="doj">
+                                            <input class="form-control refreshable" id="doj" type="date" name="doj">
                                           </div>
                                         </div>
                                         <div class="col-md-3">
                                           <div class="form-group">
                                             <label for="in_time">In-time</label>
-                                            <input class="form-control" id="in_time" type="time" name="in_time">
+                                            <input class="form-control refreshable" id="in_time" type="time" name="in_time">
                                           </div>
                                         </div>
                                         <div class="col-md-3">
                                           <div class="form-group">
                                             <label for="out_time">Out-time</label>
-                                            <input class="form-control" id="out_time" type="time" name="out_time">
+                                            <input class="form-control refreshable" id="out_time" type="time" name="out_time">
                                           </div>
                                         </div>
                                         <!-- showing employee photo  -->
@@ -173,15 +173,15 @@
                                         <div class="col-md-6">
                                           <div class="form-group">
                                             <label for="behName1">Username</label>
-                                            <input class="form-control" id="username" name="username" type="text">
+                                            <input class="form-control refreshable" id="username" name="username" type="text">
                                           </div>
                                           <div class="form-group">
                                             <label for="participants1">Password</label>
-                                            <input class="form-control" id="password" name="password" type="text">
+                                            <input class="form-control refreshable" id="password" name="password" type="text">
                                           </div>
                                           <div class="form-group">
                                             <label for="participants1">Confirm password</label>
-                                            <input class="form-control" id="password_confirmation" name="password_confirmation" type="text">
+                                            <input class="form-control refreshable" id="password_confirmation" name="password_confirmation" type="text">
                                           </div>
                                         </div>
                                         <div class="col-md-6">
@@ -346,6 +346,8 @@
         $( "#btnNew" ).on( "click", function() {
           $('#btnSubmit').html("submit");
           $("#addEditForm").attr('action', "{{ route('pos.hrms.employees.add')}}");
+          $('.refreshable').val('');
+          $('input').prop('disabled',false);
         } );
     </script>
 @endsection

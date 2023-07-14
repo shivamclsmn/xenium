@@ -1,13 +1,13 @@
-@extends('layouts.pos.dashboard', ['title' => 'Leads', 'module' => 'CRM'])
+@extends('layouts.pos.dashboard', ['title' => 'Stocks', 'module' => 'Inventory'])
 @section('content')
 <div class="row">
     <div class="col-12">
         <div class="card">
             <div class="card-body">
                 <div class="row">
-                    <h2 class="mb-4 col-md-6 text-md-left text-center">Leads</h2>
+                    <h2 class="mb-4 col-md-6 text-md-left text-center">Stocks</h2>
                     <div class="mb-4 col-md-6 text-right">
-                        <button class="btn btn-primary btn-sm" id="btnNew" data-toggle="modal" data-target="#addEditModel">New Lead</button>
+                        <button class="btn btn-primary btn-sm" id="btnNew" data-toggle="modal" data-target="#addEditModel">New Stock</button>
                     </div>
                 </div>
                 <!-- Modal -->
@@ -21,70 +21,52 @@
                                 </button>
                             </div>
                             <div class="modal-body" id="demo">
-                                <form action={{route('pos.crm.leads.add')}} method='post' id="addEditForm" enctype="multipart/form-data">
+                                <form action={{route('pos.inventory.stocks.add')}} method='post' id="addEditForm" enctype="multipart/form-data">
                                   @csrf
                                 <div class="step-app">
                                   <ul class="step-steps">
-                                    <li><a href="#step1"><span class="number">1</span> Lead Info</a></li>
-                                    <li><a href="#step2"><span class="number">2</span> Lead Action</a></li>
+                                    <li><a href="#step1"><span class="number">1</span> Stock Info</a></li>
+                                    <!-- <li><a href="#step2"><span class="number">2</span> Lead Action</a></li> -->
                                   </ul>
                                   <div class="step-content">
                                     <div class="step-tab-panel" id="step1">
-                                    <input class="form-control" id="id" name="id" type="text" hidden>
+                                    <input  id="id" name="id" type="text" hidden>
+                                    <div class="row">
+                                          <div class="col-md-12">
+                                            <div class="form-group">
+                                              <label for="description">Select Product:</label>
+                                              <input class="form-control" type='text' name="productTyping" id="productTyping" value='' placeholder="Type product name to search">                                                 
+                                              <ul class="list-group" id='productList'></ul>
 
+                                              <input type='hidden' name="products" id="products" value=''>
+                                              <div  ><table id="productArea" class="table"></table>
+                                              </div>
+
+                                            </div>
+                                          </div>
+                                        </div>
                                         <div class="row m-t-2">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                              <label for="lastName1">Phone Number:</label>
-                                              <input type="hidden" name="customerId" id="customerId" >
-                                              <input class="form-control refreshable" type="text" placeholder="Mobile" name="mobile" id="mobile" pattern="[0-9]{10}" required>
-                                              <ul class="list-group" id='customers'></ul>
+                                            <label >Select Vendor:</label>
+                                            <input type="hidden" name="vendorId" id="vendorId" required>
+                                              <input class="form-control" type="text" placeholder="Type vendor name or mobile to search" name="vendor" id="vendor" >
+                                              <ul class="list-group" id='vendors'></ul>
                                             </div>
                                           </div>
                                           <div class="col-md-6">
                                             <div class="form-group">
-                                              <label for="firstName1">Email Address:</label>
-                                              <input class="form-control refreshable" type="text" placeholder="Email" name="email" id="email">
+                                            <p>Vendor: <strong id='vendorName'></strong><p>
+                                              <p>Company: <strong id='companyName'></strong><p>
                                             </div>
                                           </div>
 
                                         </div>
+
+
+
                                         <div class="row">
-                                          <div class="col-md-6">
-                                            <div class="form-group">
-                                              <label for="firstName1">Full Name:</label>
-                                              <input class="form-control refreshable" type="text" id="fullname" placeholder="Full Name" name="fullname" required>
-                                            </div>
-                                          </div>
-                                          <div class="col-md-6">
-                                            <div class="form-group">
-                                              <label for="location">Location:</label>
-                                              <input class="form-control refreshable" type="text" id="location" name="location" required>
-                                            </div>
-                                          </div>
-                                        </div>
-                                        <div class="row">
-                                          <div class="col-md-12">
-                                            <div class="form-group">
-                                              <label for="description">Select Products:</label>
-                                              <input type='hidden' name="products" id="products" value=''>
-                                              <div  id="productArea">
-                                              </div><br>
-                                             <input class="form-control refreshable" type='text' name="productTyping" id="productTyping" value='' placeholder="Type product name to search">                                                 
-                                              <ul class="list-group" id='productList'></ul>
-                                            </div>
-                                          </div>
-                                        </div>
-                                        <div class="row">
-                                          <div class="col-md-12">
-                                            <div class="form-group">
-                                              <label for="description">Query/Lead description:</label>
-                                              <textarea class="form-control refreshable" type="text" id="description" name="description" ></textarea>
-                                            </div>
-                                          </div>
-                                        </div>
-                                        <div class="row">
-                                          <div class="col-md-3">
+                                          <!-- <div class="col-md-3">
                                             <div class="form-group">
                                               <label for="nextCallingDate">Next Calling Date:</label>
                                               @php 
@@ -93,21 +75,11 @@
                                               @endphp
                                               <input type="date" class="form-control"  id="nextCallingDate" name="nextCallingDate" value="{{$date}}">
                                             </div>
-                                          </div>
-                                          <div class="col-md-3">
-                                            <div class="form-group">
-                                              <label for="nextCallingDate">Lead Source:</label>
-                                              <select class="form-control"  id="source" name="source" >
-                                                <option value=1 >Reference</option>
-                                                <option value=2 >Website</option>
-                                                <option value=2 >Facebook</option>
-                                                <option value=3 >Youtube</option>
-                                                <select>
-                                            </div>
-                                          </div>
+                                          </div> -->
+                                         
                                         </div>
                                     </div>
-                                    <div class="step-tab-panel" id="step2">
+                                    <!-- <div class="step-tab-panel" id="step2">
                                       <div class="row">
                                       <div class="col-md-3">
                                           <div class="form-group">
@@ -121,7 +93,7 @@
                                           <div class="col-md-9">
                                             <div class="form-group">
                                               <label for="comment">Comment:</label>
-                                              <textarea class="form-control refreshable" type="text" id="comment" name="comment" ></textarea>
+                                              <textarea class="form-control" type="text" id="comment" name="comment" ></textarea>
                                             </div>
                                           </div>
                                         </div>
@@ -162,7 +134,7 @@
                                             </div>
                                           </div>
                                       </div>
-                                    </div>
+                                    </div> -->
                                   </div>
                                   <div class="step-footer">
                                     <button data-direction="prev" class="btn btn-light">Previous</button>
@@ -181,11 +153,12 @@
                         <thead>
                           <tr>
                             <th>Sr.#</th>
-                            <th>Lead ID</th>
-                            <th>Personal Info</th>
-                            <th>Contact Info</th>
-                            <th>Description</th>
-                            <th>Next Calling Date</th>
+                            <th>Stock ID</th>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Batch</th>
+                            <th>Date</th>
                             <th>Actions</th>
                           </tr>
                         </thead>
@@ -194,64 +167,6 @@
                         </tbody>
                     </table>
                 </div>
-
-
-
-                <div class="modal fade" id="leadHistoryModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog modal-xl">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Lead History</h5>
-                                <button type="button" class="close" data-dismiss="modal" id="closeModal" aria-label="Close">
-                                <span aria-hidden="true"><i class="fa-light fa-close"></i></span>
-                                </button>
-                            </div>
-                            <div class="modal-body" id="demo">
-                               
-                          
-                        
-
-                                  <div class="step-content">
-                                    Lead ID: <b><span id="leadId"></span></b>
-                                    <!-- <div class="step-tab-panel" id="step1"> -->
-                                    
-                                                      <!-- <div class="table-responsive"> -->
-                                                        <table id="leadHistoryDatatable" class="table table-bordered table-hover table-sm">
-
-                                                          <thead>
-                                                            <tr>
-                                                              <th>Sr.#</th>
-                                                              <th>ID</th>
-                                                              <th>Comment</th>
-                                                              <th>Assigned User</th>
-                                                              <th>Comment Type</th>
-                                                              <th>Status</th>
-                                                              <th>Next Calling Date</th>
-                                                            </tr>
-                                                          </thead>
-                                                          <tbody id="tbodyHistory">
-                                                            
-                                                          </tbody>
-                                                          </table>
-
-                                                      <!-- </div> -->
-                                    
- 
-                                    <!-- </div> -->
-                    
-
-                                 
-                                </div>
-                              
-                            </div>  
-                        </div>
-                    </div>
-                </div>
-
-
-
-
-
             </div>
         </div>
     </div>
@@ -273,32 +188,20 @@
                 processing: true,
                 serverSide: true,
                 responsive: true,
-                ajax: "{{ route('pos.crm.leads.table') }}",
+                ajax: "{{ route('pos.inventory.stocks.table') }}",
                 columns: [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                    {data: 'lead_id', name: 'lead_id'},
-                    {data: 'personal_info', name: 'personal_info'},
-                    {data: 'contact_info', name: 'contact_info'},
-                    {data: 'description', name: 'description'},
-                    {data: 'nextCallingDate', name: 'nextCallingDate'},
+                    {data: 'id', name: 'id'},
+                    {data: 'productName', name: 'productName'},
+                    {data: 'pricePerUnit', name: 'pricePerUnit'},
+                    {data: 'quantity', name: 'quantity'},
+                    {data: 'batch', name: 'batch'},
+                    {data: 'date', name: 'date'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ]
             });
         });
             
-        function getHistory(id){
-          $.ajax({
-                data: {'id':id},
-                url: "{{ route('pos.crm.leads.getHistory') }}",
-                type: 'GET',
-                dataType: 'JSON',
-                success: function(response) {
-                  console.log(response);
-                  $('#tbodyHistory').html(response);
-                }
-            });
-            $('#leadId').html(id);
-        }
 
         $('#addBtn').on('click', function(e) {
             $.ajaxSetup({
@@ -310,7 +213,7 @@
             $(".save-btn").html('<i class="fa-light fa-loader rotate"></i>');
             $.ajax({
                 data: $('#addEditForm').serialize(),
-                url: "{{ route('pos.crm.leads.add') }}",
+                url: "{{ route('pos.inventory.stocks.add') }}",
                 type: 'POST',
                 dataType: 'JSON',
                 success: function(data) {
@@ -332,7 +235,7 @@
         function showData(id) {
             $.ajax({
                 data: {'id':id},
-                url: "{{ route('pos.crm.leads.show') }}",
+                url: "{{ route('pos.inventory.stocks.show') }}",
                 type: 'GET',
                 dataType: 'JSON',
                 success: function(response) {
@@ -346,7 +249,7 @@
                     $('#email').val(response.customer.email);
                     $('#location').val(response.customer.location);  
 
-                    $("#addEditForm").attr('action', "{{ route('pos.crm.leads.update')}}"); 
+                    $("#addEditForm").attr('action', "{{ route('pos.inventory.stocks.update')}}"); 
                     $('#btnSubmit').html("Update");
                     $('#step2').prop('disabled',true);
                     $('#fullname').prop('disabled',true);
@@ -391,9 +294,8 @@
         } );
         $( "#btnNew" ).on( "click", function() {
           $('#btnSubmit').html("submit");
-          $("#addEditForm").attr('action', "{{ route('pos.crm.leads.add')}}");
+          $("#addEditForm").attr('action', "{{ route('pos.inventory.stocks.add')}}");
           $('.refreshable').val('');
-          $('input').prop('disabled',false);
           $('input').prop('disabled',false);
           $('textarea').prop('disabled',false);
           $('select').prop('disabled',false);
@@ -403,20 +305,20 @@
         } );
 
 
-          $("#mobile").keyup(function(){
-            if($('#mobile').val().length==0)$('#customers').html('');
+          $("#vendor").keyup(function(){
+            if($('#vendor').val().length==0)$('#vendors').html('');
             else
             $.ajax({
 
               type:'GET',
-              url: "{{ route('pos.crm.leads.getCustomersSearch') }}",
-              data: {'mobile':$('#mobile').val()},
+              url: "{{ route('pos.inventory.stocks.getVendorsSearch') }}",
+              data: {'vendor':$('#vendor').val()},
               dataType:'JSON',
               success: function(response){
 
                 console.log(response);
 
-                $("#customers").html(response);
+                $("#vendors").html(response);
               }
             }); 
         });
@@ -439,46 +341,13 @@
             }); 
         });
 
-        $("#user").keyup(function(){
-            if($('#user').val().length==0)$('#users').html('');
-            else
-            $.ajax({
-
-              type:'GET',
-              url: "{{ route('pos.crm.leads.getUsersSearch') }}",
-              data: {'user':$('#user').val()},
-              dataType:'JSON',
-              success: function(response){
-
-                console.log(response);
-
-                $("#users").html(response);
-              }
-            }); 
-        });
-
-        function getCustomerDetails(id){
-          $.ajax({
-                data: {'id':id},
-                url: "{{ route('pos.crm.customers.show') }}",
-                type: 'GET',
-                dataType: 'JSON',
-                success: function(response) {
-                  console.log(response);
-                    $('#customerId').val(response.id);                  
-                    $('#fullname').val(response.full_name);
-                    $('#mobile').val(response.mobile);
-                    $('#email').val(response.email);
-                    $('#location').val(response.location);
-
-                    $("#fullname").attr('disabled',true); 
-                    $("#email").attr('disabled',true); 
-                    $("#location").attr('disabled',true); 
-
-                    (response.isDealer)?  $('#dealer').prop('checked',true): $('#customer').prop('checked',true);
-                    $("#customers").html('');         
-                }
-              });
+        function getVendorDetails(id, name, companyName)
+        {
+            $('#vendorId').val(id);
+            $('#vendorName').html(name);
+            $('#companyName').html(companyName);
+            $(".list-group").html('');
+        $("#vendor").val('');
         }
 
         function addProduct(id,productName){
@@ -486,9 +355,14 @@
           if(!$("#products").val().includes('-'+id+'-'))
           {
             $("#products").val($("#products").val()+'-'+id.toString()+'-');
-          $("#productArea").append(' <span class="border bg-light px-1 py-1 w-25" id="pShow*'+id+'">'+productName+'&nbsp&nbsp <i class="fa fa-close" onclick="removeProduct('+id+')"></i><span>&nbsp');  
+
+            var str=' <tr><td class="px-3 py-3">'+productName+'</td><td><input class="form-control " type="text" name="price-'+id+'" id="price-'+id+'" placeholder="Fill Price"></td>';
+            str+='<td> <input class="form-control  " type="text" name="quantity-'+id+'" id="quantity-'+id+'" placeholder="Fill Quantity"> </td><td><i class="fa fa-trash" onclick="removeProduct('+id+')"></i></td></tr>';
+   
+          $("#productArea").append(str);  
           }
-          
+          $(".list-group").html('');
+        $("#productTyping").val('');
         }
         function removeProduct(id){
           document.getElementById('pShow*'+id).remove();
@@ -502,5 +376,6 @@
         $("#nextCallingDate").on('change',function(){
           $("#nextCallingDateHistory").val($("#nextCallingDate").val());
         });
+        
     </script>
 @endsection

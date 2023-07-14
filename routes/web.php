@@ -22,3 +22,4 @@ require __DIR__.'/pos/dashboard.php';
 require __DIR__.'/pos/backend/hrms.php';
 require __DIR__.'/pos/backend/crm.php';
 require __DIR__.'/pos/backend/inventory.php';
+require __DIR__.'/pos/backend/sales.php';
